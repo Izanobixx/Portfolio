@@ -353,3 +353,106 @@ canvas{
 .open #door-bottom {
   transform:translateY(100%);
 }
+
+#window-container {
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100vw;
+    height:100vh;
+
+    pointer-events:none;
+
+    z-index:5000;
+
+}
+
+.xp-window {
+  pointer-events:auto;
+
+  position:absolute;
+  background:#ece9d8;
+  border:2px solid #0047ab;
+
+  box-shadow:
+  8px 8px 0 rgba(0,0,0,.3);
+
+  position: absolute;
+  min-width: 250px;
+  min-height: 150px;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.xp-titlebar {
+  height: 28px;
+  background: linear-gradient(#0a5ad4, #003caa);
+  color: white;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  cursor: grab;
+  user-select: none;
+}
+
+.xp-title {
+    padding-left: 8px;
+    font-size: 13px;
+}
+
+.xp-controls {
+    display: flex;
+}
+
+.xp-controls button {
+    width: 28px;
+    height: 22px;
+    border: none;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+}
+
+.xp-content {
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.resize-handle{
+  position:absolute;
+}
+
+.resize-right{
+  right:0;
+  top:0;
+  width:6px;
+  height:100%;
+  cursor:ew-resize;
+}
+
+.resize-bottom{
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.resize-corner {
+    right: 0;
+    bottom: 0;
+    width: 12px;
+    height: 12px;
+    cursor: nwse-resize;
+}

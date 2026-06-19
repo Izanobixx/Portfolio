@@ -1,6 +1,8 @@
 import './style.css';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { WindowManager } from './WindowManager';
+import { ComputerWindow } from './windows/ComputerWindow';
 
 console.log("main.js loaded");
 
@@ -53,11 +55,11 @@ document.body.appendChild(renderer.domElement);
 // --------------------
 // LIGHTS
 // --------------------
-const light = new THREE.AmbientLight(0xffeebc, 0.5);
+const light = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(light);
 
 const hemiLight = new THREE.HemisphereLight(
-    0xffeebc, // cielo
+    0xffffff, // cielo
     0x222222, // suelo/sombra
     1
 );
@@ -76,6 +78,7 @@ let minTimePassed = false;
 // --------------------
 // LOAD MODEL
 // --------------------
+let fan;
 loader.load(
     '/models/room.glb',
 
@@ -85,8 +88,21 @@ loader.load(
         const model = gltf.scene;
 
         model.traverse((child)=>{
+
+            if (child.name == "Fan"){
+                fan = child;
+                console.log("FAN FOUND");
+            }
+
             if (child.isMesh){
                 child.material = new THREE.MeshStandardMaterial({map: child.material.map});
+
+                const material = child.material;
+                if (material.map && material.map.image){
+                    material.transparent = true;
+                    material.alphaTest = 0.1;
+                    material.needsUpdate = true;
+                }
             }
         });
 
@@ -180,6 +196,9 @@ function animate() {
     requestAnimationFrame(animate);
 
     updateCameraRotAndPos();
+    if (fan){
+        fan.rotation.y += 0.05;
+    }
 
     renderer.render(scene, camera);
 }
@@ -193,3 +212,13 @@ function updateCameraRotAndPos(){
 }
 
 animate();
+
+// --------------------
+// COMPUTER WINDOWS
+// --------------------
+
+const windowManager = new WindowManager();
+
+//debug
+windowManager.createWindow(ComputerWindow);
+windowManager.createWindow(ComputerWindow);
