@@ -100,8 +100,11 @@ loader.load(
                 const material = child.material;
                 if (material.map && material.map.image){
                     material.transparent = true;
-                    material.alphaTest = 0.1;
+                    material.alphaTest = 0.75;
                     material.needsUpdate = true;
+                    if (material.transparent){
+                        material.side = THREE.DoubleSide;
+                    }
                 }
             }
         });
