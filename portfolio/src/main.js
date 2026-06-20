@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { WindowManager } from './WindowManager';
 import { ComputerWindow } from './windows/ComputerWindow';
+import { DustSystem } from './systems/DustSystem';
 
 console.log("main.js loaded");
 
@@ -55,7 +56,7 @@ document.body.appendChild(renderer.domElement);
 // --------------------
 // LIGHTS
 // --------------------
-const light = new THREE.AmbientLight(0xffffff, 0.5);
+const light = new THREE.AmbientLight(0xfff3da, 0.8);
 scene.add(light);
 
 const hemiLight = new THREE.HemisphereLight(
@@ -64,6 +65,12 @@ const hemiLight = new THREE.HemisphereLight(
     1
 );
 scene.add(hemiLight);
+
+// --------------------
+// DUST
+// --------------------
+const dust = new DustSystem(scene);
+
 
 // --------------------
 // LOADER
@@ -91,13 +98,20 @@ loader.load(
 
             if (child.name == "Fan"){
                 fan = child;
-                console.log("FAN FOUND");
             }
+            
 
             if (child.isMesh){
                 child.material = new THREE.MeshStandardMaterial({map: child.material.map});
 
                 const material = child.material;
+
+                if (child.name.includes("Emissive"))
+                {
+                    child.material.emissive = new THREE.Color(0xDF5D09);
+                    child.material.emissiveIntensity = 100;
+                }
+
                 if (material.map && material.map.image){
                     material.transparent = true;
                     material.alphaTest = 0.75;
@@ -198,6 +212,7 @@ window.addEventListener(
 function animate() {
     requestAnimationFrame(animate);
 
+    dust.update();
     updateCameraRotAndPos();
     if (fan){
         fan.rotation.y += 0.05;
