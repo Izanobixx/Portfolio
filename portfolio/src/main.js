@@ -4,6 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { WindowManager } from './WindowManager';
 import { ComputerWindow } from './windows/ComputerWindow';
 import { DustSystem } from './systems/DustSystem';
+import { InteractionManager } from './InteractionManager';
 
 console.log("main.js loaded");
 
@@ -86,6 +87,8 @@ let minTimePassed = false;
 // LOAD MODEL
 // --------------------
 let fan;
+const clickableObjects = [];
+
 loader.load(
     '/models/room.glb',
 
@@ -102,6 +105,11 @@ loader.load(
             
 
             if (child.isMesh){
+
+                if (child.name.includes("Computer") || child.name.includes("Keyboard") || child.name.includes("Bed") || child.name.includes("Shelf") || child.name.includes("Videogames")){
+                    clickableObjects.push(child);
+                }
+
                 child.material = new THREE.MeshStandardMaterial({map: child.material.map});
 
                 const material = child.material;
@@ -110,6 +118,10 @@ loader.load(
                 {
                     child.material.emissive = new THREE.Color(0xDF5D09);
                     child.material.emissiveIntensity = 100;
+                }
+                if (child.name.includes("EmissiveGreen")){
+                    child.material.emissive = new THREE.Color(0x11ff11);
+                    child.material.emissiveIntensity = 50;
                 }
 
                 if (material.map && material.map.image){
@@ -236,7 +248,4 @@ animate();
 // --------------------
 
 const windowManager = new WindowManager();
-
-//debug
-windowManager.createWindow(ComputerWindow);
-windowManager.createWindow(ComputerWindow);
+const interactionManager = new InteractionManager(camera, renderer, clickableObjects, windowManager);

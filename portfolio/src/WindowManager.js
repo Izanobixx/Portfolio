@@ -7,12 +7,21 @@ export class WindowManager{
         this.windows = [];
     }
 
-    createWindow(type, options){
-        const win = new type(this,options);
+    createWindow(type, options = {}){
+        console.log("Creating window type: ", type);
+        console.log("Options: ", options);
+        console.log("please fucking work");
+        
+        const win = new type(this, options);
+
+        if (!win || typeof win.open !== "function") {
+            console.error("Invalid window instance:", win);
+            return;
+        }
 
         this.windows.push(win);
-
         win.open();
+
         return win;
     }
 

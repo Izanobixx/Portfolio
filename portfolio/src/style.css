@@ -366,7 +366,7 @@ canvas{
 
     pointer-events:none;
 
-    z-index:5000;
+    z-index:10;
 
 }
 
@@ -387,6 +387,7 @@ canvas{
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  pointer-events: auto;
 }
 
 .xp-titlebar {
@@ -455,4 +456,17 @@ canvas{
     width: 12px;
     height: 12px;
     cursor: nwse-resize;
+}
+
+.xp-window{
+  transform-origin: center;
+
+  transition:
+    transform 0.35s cubic-bezier(.34,1.56,.64,1),
+    opacity 0.25s;
+}
+
+.xp-window.opening{
+  transform:scale(0.05);
+  opacity:0;
 }
