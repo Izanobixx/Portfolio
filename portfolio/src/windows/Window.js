@@ -18,6 +18,8 @@ export class Window {
 
         this.isMaximized = false;
 
+        this.content = options.content || '';
+
         this.create();
         this.initEvents();
     }
@@ -43,6 +45,10 @@ export class Window {
             <div class="resize-handle resize-bottom"></div>
             <div class="resize-handle resize-corner"></div>
         `;
+
+        const contentEl = this.element.querySelector(".xp-content");
+        if (this.content)
+            contentEl.innerHTML = this.content;
 
         const el = this.element;
 

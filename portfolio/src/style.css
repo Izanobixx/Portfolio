@@ -464,9 +464,225 @@ canvas{
   transition:
     transform 0.35s cubic-bezier(.34,1.56,.64,1),
     opacity 0.25s;
+  
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .xp-window.opening{
   transform:scale(0.05);
   opacity:0;
+}
+
+.xp-window input,
+.xp-window textarea {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+}
+
+/* ============================================
+   PC EXPLORER STYLES (Windows XP inspired)
+   ============================================ */
+
+.xp-explorer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #ffffff;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-size: 13px;
+    color: #1e1e1e;
+}
+
+.xp-addressbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    background: #f0f0f0;
+    border-bottom: 1px solid #c0c0c0;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.xp-addressbar span {
+    color: #333;
+    font-weight: bold;
+}
+
+.xp-addressbar input {
+    flex: 1;
+    background: white;
+    border: 1px solid #a0a0a0;
+    padding: 2px 6px;
+    font-size: 12px;
+    outline: none;
+    border-radius: 2px;
+    color: #1e1e1e;
+}
+
+.xp-addressbar button {
+    background: #e0e0e0;
+    border: 1px solid #a0a0a0;
+    padding: 2px 12px;
+    font-size: 12px;
+    cursor: default;
+    color: #666;
+    border-radius: 2px;
+}
+
+.xp-explorer-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.xp-sidebar {
+    width: 160px;
+    background: #e5e5e5;
+    border-right: 1px solid #c0c0c0;
+    padding: 4px 0;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.xp-sidebar .sidebar-header {
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+    padding: 4px 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 4px;
+}
+
+.xp-sidebar .folder-item,
+.xp-sidebar .file-item {
+    padding: 4px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #1e1e1e;
+    border-left: 3px solid transparent;
+}
+
+.xp-sidebar .folder-item:hover,
+.xp-sidebar .file-item:hover {
+    background: #d0d0d0;
+}
+
+.xp-sidebar .folder-item.active {
+    background: #0047ab;
+    color: white;
+    border-left-color: #ffcc00;
+}
+
+.xp-sidebar hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 6px 8px;
+}
+
+.xp-content-grid {
+    flex: 1;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 12px;
+    align-content: start;
+    overflow-y: auto;
+    background: white;
+}
+
+.xp-content-grid .grid-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 8px 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 12px;
+    gap: 4px;
+    transition: background 0.15s, border-color 0.15s;
+    min-height: 80px;
+    justify-content: center;
+}
+
+.xp-content-grid .grid-item:hover {
+    background: #bfd1e9;
+    border-color: #0047ab;
+}
+
+.xp-content-grid .grid-item .icon {
+    font-size: 32px;
+    line-height: 1.2;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.xp-content-grid .grid-item .icon img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.xp-content-grid .grid-item .icon .icon-emoji {
+    font-size: 32px;
+}
+
+.xp-content-grid .grid-item .label {
+    word-wrap: break-word;
+    max-width: 100%;
+    line-height: 1.3;
+    font-size: 11px;
+}
+
+.xp-content-grid .empty-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #999;
+    padding: 40px 0;
+    font-size: 14px;
+}
+
+.xp-statusbar {
+    padding: 2px 10px;
+    background: #f0f0f0;
+    border-top: 1px solid #c0c0c0;
+    font-size: 12px;
+    color: #444;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Sub-window content overrides (for PDF/Image/Video viewers) */
+.xp-content embed,
+.xp-content video,
+.xp-content img {
+    display: block;
+    background: #f8f8f8;
+}
+
+.grid-item.selected {
+    background: #78a1db;
+    color: white;
+    border-color: #0047ab;
+}
+.grid-item.selected .label {
+    color: white;
 }

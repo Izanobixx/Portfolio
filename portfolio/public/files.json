@@ -1,0 +1,52 @@
+{
+  "id": "root",
+  "label": "Este equipo",
+  "icon": "📁",
+  "type": "folder",
+  "children": [
+    {
+      "id": "docs",
+      "label": "docs",
+      "icon": "📁",
+      "type": "folder",
+      "children": [
+        {
+          "id": "docs/3blue1brown.pdf",
+          "label": "3blue1brown.pdf",
+          "icon": "📄",
+          "type": "pdf",
+          "url": "/computer/docs/3blue1brown.pdf"
+        }
+      ]
+    },
+    {
+      "id": "images",
+      "label": "images",
+      "icon": "📁",
+      "type": "folder",
+      "children": [
+        {
+          "id": "images/test",
+          "label": "test",
+          "icon": "📁",
+          "type": "folder",
+          "children": []
+        },
+        {
+          "id": "images/FotoPerfil.png",
+          "label": "FotoPerfil.png",
+          "icon": "🖼️",
+          "type": "image",
+          "url": "/computer/images/FotoPerfil.png"
+        }
+      ]
+    },
+    {
+      "id": "videos",
+      "label": "videos",
+      "icon": "📁",
+      "type": "folder",
+      "children": []
+    }
+  ]
+}

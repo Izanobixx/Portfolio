@@ -38,7 +38,7 @@ export class InteractionManager{
 
     handleObject(object,event){
         if(object.name.includes("Computer")){
-            this.windowManager.createWindow(ComputerWindow,{title:"Computer.exe",width:600,height:400, originX:event.clientX, originY:event.clientY});
+            this.windowManager.createWindow(ComputerWindow,{title:"Computer.exe",width:700,height:400, originX:event.clientX, originY:event.clientY});
         }
     }
 
