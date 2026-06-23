@@ -249,3 +249,141 @@ animate();
 
 const windowManager = new WindowManager();
 const interactionManager = new InteractionManager(camera, renderer, clickableObjects, windowManager);
+
+// ==============================
+// VENTANA SUBWAY SURFERS
+// ==============================
+
+const subwayWindow = document.getElementById('subway-window');
+const subwayTitlebar = document.getElementById('subway-titlebar');
+const subwayIframe = document.getElementById('subway-iframe');
+const subwayContainer = document.getElementById('subway-video-container');
+const resizeHandle = document.getElementById('subway-resize-handle');
+
+let isDragging = false;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+
+let isResizing = false;
+let resizeStartX = 0;
+let resizeStartY = 0;
+let resizeStartWidth = 0;
+let resizeStartHeight = 0;
+
+// Posición inicial (esquina inferior derecha)
+let posX = window.innerWidth - 420;
+let posY = window.innerHeight - 290;
+
+subwayWindow.style.left = Math.max(0, posX) + 'px';
+subwayWindow.style.top = Math.max(0, posY) + 'px';
+
+// ----- ABRIR VENTANA (desde el botón) -----
+document.getElementById('bored-button').addEventListener('click', () => {
+    const windowEl = document.getElementById('subway-window');
+    const iframe = document.getElementById('subway-iframe');
+    
+    // Mostrar ventana
+    windowEl.style.display = 'block';
+    
+    // Asignar src con autoplay y timestamp para evitar caché
+    const videoId = 'iKggOfcKM28';
+    const timestamp = new Date().getTime();
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=1&modestbranding=1&rel=0&t=${timestamp}`;
+    
+    // Asegurar posición visible
+    if (parseInt(windowEl.style.left) + windowEl.offsetWidth > window.innerWidth ||
+        parseInt(windowEl.style.top) + windowEl.offsetHeight > window.innerHeight) {
+        windowEl.style.left = (window.innerWidth - 350) + 'px';
+        windowEl.style.top = (window.innerHeight - 250) + 'px';
+    }
+});
+
+// ----- CERRAR VENTANA -----
+document.getElementById('close-subway').addEventListener('click', () => {
+    const windowEl = document.getElementById('subway-window');
+    const iframe = document.getElementById('subway-iframe');
+    
+    // Ocultar ventana
+    windowEl.style.display = 'none';
+    
+    // Vaciar el src para detener el video y liberar recursos
+    iframe.src = '';
+});
+
+// ----- ARRASTRE (desde la barra de título) -----
+subwayTitlebar.addEventListener('mousedown', (e) => {
+    if (e.target.tagName === 'BUTTON') return; // No arrastrar si se hace clic en un botón
+    isDragging = true;
+    dragOffsetX = e.clientX - subwayWindow.offsetLeft;
+    dragOffsetY = e.clientY - subwayWindow.offsetTop;
+    subwayTitlebar.style.cursor = 'grabbing';
+    e.preventDefault();
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+        let newX = e.clientX - dragOffsetX;
+        let newY = e.clientY - dragOffsetY;
+        // Evitar que se salga de la pantalla
+        newX = Math.max(0, Math.min(window.innerWidth - subwayWindow.offsetWidth, newX));
+        newY = Math.max(0, Math.min(window.innerHeight - subwayWindow.offsetHeight, newY));
+        subwayWindow.style.left = newX + 'px';
+        subwayWindow.style.top = newY + 'px';
+    }
+
+    if (isResizing) {
+        let newWidth = resizeStartWidth + (e.clientX - resizeStartX);
+        let newHeight = resizeStartHeight + (e.clientY - resizeStartY);
+        // Mantener aspect ratio 16:9
+        const aspectRatio = 16 / 9;
+        if (newWidth / newHeight > aspectRatio) {
+            newWidth = newHeight * aspectRatio;
+        } else {
+            newHeight = newWidth / aspectRatio;
+        }
+        // Límites
+        newWidth = Math.max(250, Math.min(window.innerWidth - parseInt(subwayWindow.style.left), newWidth));
+        newHeight = Math.max(180, Math.min(window.innerHeight - parseInt(subwayWindow.style.top), newHeight));
+        subwayWindow.style.width = newWidth + 'px';
+        subwayWindow.style.height = (newHeight + 28) + 'px'; // incluye la altura de la barra de título
+    }
+});
+
+document.addEventListener('mouseup', () => {
+    if (isDragging) {
+        isDragging = false;
+        subwayTitlebar.style.cursor = 'grab';
+    }
+    if (isResizing) {
+        isResizing = false;
+        resizeHandle.style.cursor = 'nwse-resize';
+    }
+});
+
+// ----- REESCALADO (desde la esquina inferior derecha) -----
+resizeHandle.addEventListener('mousedown', (e) => {
+    isResizing = true;
+    resizeStartX = e.clientX;
+    resizeStartY = e.clientY;
+    resizeStartWidth = subwayWindow.offsetWidth;
+    resizeStartHeight = subwayWindow.offsetHeight - 28; // altura del video sin la barra
+    e.preventDefault();
+    resizeHandle.style.cursor = 'grabbing';
+});
+
+// Actualizar la posición si la ventana se redimensiona
+window.addEventListener('resize', () => {
+    // Asegurar que la ventana no quede fuera de la pantalla
+    const winWidth = window.innerWidth;
+    const winHeight = window.innerHeight;
+    const winLeft = parseInt(subwayWindow.style.left) || 0;
+    const winTop = parseInt(subwayWindow.style.top) || 0;
+    const winW = subwayWindow.offsetWidth;
+    const winH = subwayWindow.offsetHeight;
+    if (winLeft + winW > winWidth) {
+        subwayWindow.style.left = Math.max(0, winWidth - winW) + 'px';
+    }
+    if (winTop + winH > winHeight) {
+        subwayWindow.style.top = Math.max(0, winHeight - winH) + 'px';
+    }
+});

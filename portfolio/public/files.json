@@ -5,48 +5,324 @@
   "type": "folder",
   "children": [
     {
-      "id": "docs",
-      "label": "docs",
+      "id": "Documentos",
+      "label": "Documentos",
       "icon": "📁",
       "type": "folder",
       "children": [
         {
-          "id": "docs/3blue1brown.pdf",
+          "id": "Documentos/Simulaci-n-de-Sistemas-P",
+          "label": "Simulaci-n-de-Sistemas-P",
+          "icon": "📁",
+          "type": "folder",
+          "children": [
+            {
+              "id": "Documentos/Simulaci-n-de-Sistemas-P/.git",
+              "label": ".git",
+              "icon": "📁",
+              "type": "folder",
+              "children": []
+            },
+            {
+              "id": "Documentos/Simulaci-n-de-Sistemas-P/PSystems.nb",
+              "label": "PSystems.nb",
+              "icon": "📎",
+              "type": "file",
+              "url": "/computer/Documentos/Simulaci-n-de-Sistemas-P/PSystems.nb"
+            },
+            {
+              "id": "Documentos/Simulaci-n-de-Sistemas-P/PSystemsTextCode.txt",
+              "label": "PSystemsTextCode.txt",
+              "icon": "📝",
+              "type": "text",
+              "url": "/computer/Documentos/Simulaci-n-de-Sistemas-P/PSystemsTextCode.txt"
+            },
+            {
+              "id": "Documentos/Simulaci-n-de-Sistemas-P/SIMULADOR_SISTEMAS_P.pdf",
+              "label": "SIMULADOR_SISTEMAS_P.pdf",
+              "icon": "📄",
+              "type": "pdf",
+              "url": "/computer/Documentos/Simulaci-n-de-Sistemas-P/SIMULADOR_SISTEMAS_P.pdf"
+            }
+          ]
+        },
+        {
+          "id": "Documentos/3blue1brown.pdf",
           "label": "3blue1brown.pdf",
           "icon": "📄",
           "type": "pdf",
-          "url": "/computer/docs/3blue1brown.pdf"
+          "url": "/computer/Documentos/3blue1brown.pdf"
         }
       ]
     },
     {
-      "id": "images",
-      "label": "images",
+      "id": "Imagenes",
+      "label": "Imagenes",
       "icon": "📁",
       "type": "folder",
       "children": [
         {
-          "id": "images/test",
-          "label": "test",
+          "id": "Imagenes/Personal",
+          "label": "Personal",
           "icon": "📁",
           "type": "folder",
-          "children": []
+          "children": [
+            {
+              "id": "Imagenes/Personal/Nudes",
+              "label": "Nudes",
+              "icon": "📁",
+              "type": "folder",
+              "children": [
+                {
+                  "id": "Imagenes/Personal/Nudes/hmm...png",
+                  "label": "hmm...png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Personal/Nudes/hmm...png"
+                }
+              ]
+            },
+            {
+              "id": "Imagenes/Personal/2010.jpeg",
+              "label": "2010.jpeg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Personal/2010.jpeg"
+            },
+            {
+              "id": "Imagenes/Personal/Bajo.jpeg",
+              "label": "Bajo.jpeg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Personal/Bajo.jpeg"
+            },
+            {
+              "id": "Imagenes/Personal/Graduación1.jpg",
+              "label": "Graduación1.jpg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Personal/Graduación1.jpg"
+            }
+          ]
         },
         {
-          "id": "images/FotoPerfil.png",
+          "id": "Imagenes/Proyectos",
+          "label": "Proyectos",
+          "icon": "📁",
+          "type": "folder",
+          "children": [
+            {
+              "id": "Imagenes/Proyectos/OC",
+              "label": "OC",
+              "icon": "📁",
+              "type": "folder",
+              "children": [
+                {
+                  "id": "Imagenes/Proyectos/OC/C1.png",
+                  "label": "C1.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/OC/C1.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/OC/C2.png",
+                  "label": "C2.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/OC/C2.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/OC/C3.png",
+                  "label": "C3.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/OC/C3.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/OC/C4.png",
+                  "label": "C4.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/OC/C4.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/OC/Clip.png",
+                  "label": "Clip.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/OC/Clip.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/OC/Park.png",
+                  "label": "Park.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/OC/Park.png"
+                }
+              ]
+            },
+            {
+              "id": "Imagenes/Proyectos/Prototipo_Zombie",
+              "label": "Prototipo_Zombie",
+              "icon": "📁",
+              "type": "folder",
+              "children": [
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/Arma.png",
+                  "label": "Arma.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/Arma.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/Fábrica.png",
+                  "label": "Fábrica.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/Fábrica.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/Human.png",
+                  "label": "Human.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/Human.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/Props.png",
+                  "label": "Props.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/Props.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/ZombieGame_1.png",
+                  "label": "ZombieGame_1.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/ZombieGame_1.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/ZombieGame_2.png",
+                  "label": "ZombieGame_2.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/ZombieGame_2.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/ZombieGame_3.png",
+                  "label": "ZombieGame_3.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/ZombieGame_3.png"
+                }
+              ]
+            },
+            {
+              "id": "Imagenes/Proyectos/Shrek.jpg",
+              "label": "Shrek.jpg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Proyectos/Shrek.jpg"
+            },
+            {
+              "id": "Imagenes/Proyectos/SML.jpg",
+              "label": "SML.jpg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Proyectos/SML.jpg"
+            }
+          ]
+        },
+        {
+          "id": "Imagenes/Universidad",
+          "label": "Universidad",
+          "icon": "📁",
+          "type": "folder",
+          "children": [
+            {
+              "id": "Imagenes/Universidad/AmongUsArea.jpeg",
+              "label": "AmongUsArea.jpeg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Universidad/AmongUsArea.jpeg"
+            },
+            {
+              "id": "Imagenes/Universidad/SegundoPuesto.png",
+              "label": "SegundoPuesto.png",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Universidad/SegundoPuesto.png"
+            },
+            {
+              "id": "Imagenes/Universidad/TercerPuesto.png",
+              "label": "TercerPuesto.png",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Universidad/TercerPuesto.png"
+            },
+            {
+              "id": "Imagenes/Universidad/WarmUp.jpeg",
+              "label": "WarmUp.jpeg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Universidad/WarmUp.jpeg"
+            }
+          ]
+        },
+        {
+          "id": "Imagenes/FotoPerfil.png",
           "label": "FotoPerfil.png",
           "icon": "🖼️",
           "type": "image",
-          "url": "/computer/images/FotoPerfil.png"
+          "url": "/computer/Imagenes/FotoPerfil.png"
         }
       ]
     },
     {
-      "id": "videos",
-      "label": "videos",
+      "id": "NO_ENTRAR",
+      "label": "NO_ENTRAR",
+      "icon": "📁",
+      "type": "folder",
+      "children": [
+        {
+          "id": "NO_ENTRAR/NO_SIGAS",
+          "label": "NO_SIGAS",
+          "icon": "📁",
+          "type": "folder",
+          "children": [
+            {
+              "id": "NO_ENTRAR/NO_SIGAS/PARA_YA",
+              "label": "PARA_YA",
+              "icon": "📁",
+              "type": "folder",
+              "children": [
+                {
+                  "id": "NO_ENTRAR/NO_SIGAS/PARA_YA/ULTIMO_AVISO_NO_ENTRAR",
+                  "label": "ULTIMO_AVISO_NO_ENTRAR",
+                  "icon": "📁",
+                  "type": "folder",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Vídeos",
+      "label": "Vídeos",
       "icon": "📁",
       "type": "folder",
       "children": []
+    },
+    {
+      "id": "TontoElQueNoLoLea.txt",
+      "label": "TontoElQueNoLoLea.txt",
+      "icon": "📝",
+      "type": "text",
+      "url": "/computer/TontoElQueNoLoLea.txt"
     }
   ]
 }

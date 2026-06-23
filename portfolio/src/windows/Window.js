@@ -172,9 +172,9 @@ export class Window {
                 const snappedHeight = Math.round(newHeight / 10) * 10;
 
                 if (type == 'h' || type == 'a')
-                    el.style.width = Math.max(200, snappedWidth) + "px";
+                    el.style.width = Math.max(450, snappedWidth) + "px";
                 if (type == 'v' || type == 'a')
-                    el.style.height = Math.max(150, snappedHeight) + "px";
+                    el.style.height = Math.max(250, snappedHeight) + "px";
             };
 
             const onUp = () => {

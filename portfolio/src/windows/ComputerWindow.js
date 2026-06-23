@@ -25,14 +25,14 @@ export class ComputerWindow extends Window {
         this.goBtn = null;
         this.downloadBtn = null;
 
-        // Estado de selección
         this.selectedFile = null;
         this.selectedElement = null;
 
         this.folderIcons = {
-            'docs': '📎',
-            'images': '🖼️',
-            'videos': '🎬'
+            'documentos': '📎',
+            'imagenes': '🖼️',
+            'vídeos': '🎬',
+            'no_entrar': '🛑'
         };
 
         this.loadFiles().then(() => {
@@ -41,6 +41,7 @@ export class ComputerWindow extends Window {
             this.navigateTo('/');
         });
     }
+    
 
     async loadFiles() {
         try {
@@ -97,10 +98,11 @@ export class ComputerWindow extends Window {
     }
 
     goBack() {
-        if (this.history.length > 0) {
-            const prevPath = this.history.pop();
-            this.navigateTo(prevPath);
-        }
+        if (this.currentPath === '/') return;
+        const parts = this.currentPath.split('/').filter(p => p !== '');
+        parts.pop();
+        const parentPath = '/' + parts.join('/');
+        this.navigateTo(parentPath);
     }
 
     goToPath(inputPath) {
@@ -119,7 +121,24 @@ export class ComputerWindow extends Window {
     }
 
     renderItems(items) {
-        if (!this.contentGrid) return;
+        if (this.currentPath === '/NO_ENTRAR/NO_SIGAS/PARA_YA/ULTIMO_AVISO_NO_ENTRAR'){
+            this.renderRickRoll();
+            return;
+        }
+
+        if (this.contentGrid) {
+            this.contentGrid.style.padding = '12px';
+            this.contentGrid.style.gap = '12px';
+            this.contentGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(90px, 1fr))';
+            this.contentGrid.style.display = 'grid';
+            this.contentGrid.style.alignContent = 'start';
+            this.contentGrid.style.overflow = 'hidden';
+            this.contentGrid.style.overflowY = 'auto';
+            this.contentGrid.style.overflowX = 'hidden';
+        }
+        else
+            return;
+
         this.contentGrid.innerHTML = '';
         if (!items || items.length === 0) {
             this.contentGrid.innerHTML = '<div class="empty-message">Esta carpeta está vacía.</div>';
@@ -134,8 +153,8 @@ export class ComputerWindow extends Window {
             let iconHtml = '';
             if (item.type === 'image') {
                 iconHtml = `<img src="${item.url}" style="width:48px; height:48px; object-fit:cover; border-radius:4px;" alt="${item.label}">`;
-            } else if (item.type === 'folder' && this.folderIcons[item.label]) {
-                iconHtml = `<span class="icon-emoji">${this.folderIcons[item.label]}</span>`;
+            } else if (item.type === 'folder' && this.folderIcons[item.label.trim().toLowerCase()]) {
+                iconHtml = `<span class="icon-emoji">${this.folderIcons[item.label.trim().toLowerCase()]}</span>`;
             } else {
                 iconHtml = `<span class="icon-emoji">${item.icon}</span>`;
             }
@@ -168,6 +187,69 @@ export class ComputerWindow extends Window {
                 this.deselectItem();
             }
         });
+    }
+
+    renderRickRoll() {
+        if (!this.contentGrid) return;
+        
+        this.contentGrid.innerHTML = '';
+        this.contentGrid.style.padding = '0';
+        this.contentGrid.style.gap = '0';
+        this.contentGrid.style.gridTemplateColumns = '1fr';
+        this.contentGrid.style.alignContent = 'stretch';
+        this.contentGrid.style.display = 'flex';
+        this.contentGrid.style.flexDirection = 'column';
+        
+        const container = document.createElement('div');
+        container.style.cssText = `
+            width: 100%;
+            height: 100%;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            overflow: hidden;
+        `;
+        
+        container.innerHTML = `
+            <iframe 
+                width="100%" 
+                height="100%" 
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=1&loop=0&rel=0" 
+                frameborder="0" 
+                allow="autoplay; encrypted-media" 
+                allowfullscreen
+                style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;"
+            ></iframe>
+        `;
+        
+        container.style.position = 'relative';
+        this.contentGrid.appendChild(container);
+        
+        this.contentGrid.style.overflow = 'hidden';
+    }
+
+    renderMatrixView() {
+        if (this.contentGrid) {
+            this.contentGrid.style.display = 'none';
+        }
+
+        let matrixContainer = this.element.querySelector('.matrix-container');
+        if (!matrixContainer) {
+            matrixContainer = document.createElement('div');
+            matrixContainer.className = 'matrix-container';
+            matrixContainer.style.cssText = 'position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:10;';
+            const content = this.element.querySelector('.xp-content');
+            content.appendChild(matrixContainer);
+        } else {
+            matrixContainer.innerHTML = '';
+        }
+
+        if (this.matrixView) {
+            this.matrixView.destroy();
+        }
+        this.matrixView = new MatrixView(matrixContainer);
     }
 
     selectItem(item, element) {
@@ -280,7 +362,6 @@ export class ComputerWindow extends Window {
     }
 
     bindEvents() {
-
         if (this.goBtn && this.addressInput) {
             const goHandler = () => {
                 this.goToPath(this.addressInput.value);
@@ -290,31 +371,16 @@ export class ComputerWindow extends Window {
                 if (e.key === 'Enter') goHandler();
             });
         }
-
-        const folderItems = this.element.querySelectorAll('.folder-item[data-path]');
-        folderItems.forEach(el => {
-            el.addEventListener('click', () => {
-                const path = el.dataset.path;
-                this.navigateTo(path);
-            });
-        });
-
-        const fileItems = this.element.querySelectorAll('.file-item[data-file]');
-        fileItems.forEach(el => {
-            el.addEventListener('click', () => {
-                const fileId = el.dataset.file;
-                const rootFiles = this.filesTree.children?.filter(c => c.type !== 'folder') || [];
-                const file = rootFiles.find(f => f.id === fileId);
-                if (file) this.openFile(file);
-            });
-        });
     }
 
     buildSidebar() {
         if (!this.sidebarDynamic || !this.sidebarFiles) return;
         const topFolders = this.filesTree.children?.filter(c => c.type === 'folder') || [];
         this.sidebarDynamic.innerHTML = topFolders.map(f => {
-            const icon = this.folderIcons[f.label] || f.icon;
+            console.log("RAAAAAAAAAAAAHH");
+            console.log(f.label.trim().toLowerCase());
+            console.log(this.folderIcons[f.label.trim().toLowerCase()]);
+            const icon = this.folderIcons[f.label.trim().toLowerCase()] || f.icon;
             return `
                 <div class="folder-item" data-path="/${f.label}">
                     <span>${icon}</span> ${f.label}
@@ -352,13 +418,95 @@ export class ComputerWindow extends Window {
         });
     }
 
-    openFile(file) {
+    async openFile(file) {
         let content = '';
         let title = file.label;
         let width = 500;
         let height = 400;
         const centerX = window.innerWidth / 2 - width / 2;
         const centerY = window.innerHeight / 2 - height / 2;
+
+        if (file.type === 'image') {
+            const items = this.getItemsAtPath(this.currentPath) || [];
+            const images = items.filter(item => item.type === 'image');
+            const currentIndex = images.findIndex(img => img.id === file.id);
+
+            if (images.length === 0) {
+                content = `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#222; color:#fff;">No hay imágenes</div>`;
+            } else {
+                const currentUrl = images[currentIndex].url;
+                const hasNav = images.length > 1;
+                content = `
+                    <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; position:relative; background:#222;">
+                        <img id="image-viewer" src="${currentUrl}" style="max-width:100%; max-height:100%; object-fit:contain; user-select:none;">
+                        ${hasNav ? `
+                            <button id="prev-image" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:10px 15px; cursor:pointer; font-size:24px; border-radius:4px; opacity:0.7; transition:opacity 0.2s; user-select:none;">◀</button>
+                            <button id="next-image" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:10px 15px; cursor:pointer; font-size:24px; border-radius:4px; opacity:0.7; transition:opacity 0.2s; user-select:none;">▶</button>
+                        ` : ''}
+                    </div>
+                `;
+                width = 700;
+                height = 550;
+            }
+
+            const win = this.manager.createWindow(Window, {
+                title: title,
+                width: width,
+                height: height,
+                x: centerX,
+                y: centerY,
+                originX: centerX,
+                originY: centerY,
+                content: content
+            });
+
+            if (images.length > 1) {
+                const img = win.element.querySelector('#image-viewer');
+                const prevBtn = win.element.querySelector('#prev-image');
+                const nextBtn = win.element.querySelector('#next-image');
+                let idx = currentIndex;
+
+                const updateImage = (newIdx) => {
+                    idx = (newIdx + images.length) % images.length;
+                    img.src = images[idx].url;
+                    win.title = images[idx].label;
+                    const titleBar = win.element.querySelector('.xp-title');
+                    if (titleBar) titleBar.textContent = images[idx].label;
+                };
+
+                prevBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    updateImage(idx - 1);
+                });
+                nextBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    updateImage(idx + 1);
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') {
+                        const activeWin = this.manager.windows[this.manager.windows.length - 1];
+                        if (activeWin === win) {
+                            updateImage(idx - 1);
+                            e.preventDefault();
+                        }
+                    } else if (e.key === 'ArrowRight') {
+                        const activeWin = this.manager.windows[this.manager.windows.length - 1];
+                        if (activeWin === win) {
+                            updateImage(idx + 1);
+                            e.preventDefault();
+                        }
+                    }
+                });
+
+                prevBtn.addEventListener('mouseenter', () => prevBtn.style.opacity = '1');
+                prevBtn.addEventListener('mouseleave', () => prevBtn.style.opacity = '0.7');
+                nextBtn.addEventListener('mouseenter', () => nextBtn.style.opacity = '1');
+                nextBtn.addEventListener('mouseleave', () => nextBtn.style.opacity = '0.7');
+            }
+
+            return;
+        }
 
         switch (file.type) {
             case 'pdf':
@@ -373,15 +521,7 @@ export class ComputerWindow extends Window {
                 width = 700;
                 height = 550;
                 break;
-            case 'image':
-                content = `
-                    <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#222;">
-                        <img src="${file.url}" style="max-width:100%; max-height:100%; object-fit:contain;" alt="${file.label}">
-                    </div>
-                `;
-                width = 600;
-                height = 500;
-                break;
+
             case 'video':
                 content = `
                     <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#000;">
@@ -394,6 +534,28 @@ export class ComputerWindow extends Window {
                 width = 700;
                 height = 500;
                 break;
+
+            case 'text':
+                try {
+                    const response = await fetch(file.url);
+                    if (!response.ok) throw new Error('No se pudo cargar el archivo');
+                    const text = await response.text();
+                    content = `
+                        <div style="width:100%; height:100%; padding:16px; box-sizing:border-box; overflow:auto; background:#f8f8f8; font-family:monospace; white-space:pre-wrap; word-wrap:break-word; font-size:13px; color:#333;">
+                            ${text}
+                        </div>
+                    `;
+                } catch (error) {
+                    content = `
+                        <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#f8f8f8; font-family:sans-serif; font-size:14px; color:#c00;">
+                            Error al cargar el archivo: ${error.message}
+                        </div>
+                    `;
+                }
+                width = 600;
+                height = 450;
+                break;
+
             default:
                 content = `
                     <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#f8f8f8; font-family:sans-serif; font-size:14px; color:#333;">
