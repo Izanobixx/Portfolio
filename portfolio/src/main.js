@@ -106,9 +106,16 @@ loader.load(
 
             if (child.isMesh){
 
-                if (child.name.includes("Computer") || child.name.includes("Keyboard") || child.name.includes("Bed") || child.name.includes("Shelf") || child.name.includes("Videogames")){
+                //update bounding box manually to avoid fing collision erros
+                child.geometry.computeBoundingBox();
+                child.geometry.computeBoundingSphere();
+                child.updateMatrixWorld(true);
+
+                console.log("FOUND: " + child.name);
+                if (child.name.includes("Computer") || child.name.includes("Keyboard") || child.name.includes("Bed") || child.name.includes("Shelf") || child.name.includes("Videogames") || child.name.includes("Corcho")){
+                    
                     clickableObjects.push(child);
-                }
+                } 
 
                 child.material = new THREE.MeshStandardMaterial({map: child.material.map});
 
@@ -320,7 +327,7 @@ subwayTitlebar.addEventListener('mousedown', (e) => {
     e.preventDefault();
 });
 
-document.addEventListener('mousemove', (e) => {
+document.addEventListener('pointermove', (e) => {
     if (isDragging) {
         let newX = e.clientX - dragOffsetX;
         let newY = e.clientY - dragOffsetY;
@@ -349,7 +356,7 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
-document.addEventListener('mouseup', () => {
+document.addEventListener('pointerup', () => {
     if (isDragging) {
         isDragging = false;
         subwayTitlebar.style.cursor = 'grab';

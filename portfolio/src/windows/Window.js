@@ -138,60 +138,53 @@ export class Window {
     }
 
     enableResize() {
-
         const el = this.element;
 
         const right = el.querySelector(".resize-right");
         const bottom = el.querySelector(".resize-bottom");
         const corner = el.querySelector(".resize-corner");
 
-        const startResizeHorizontal = (e) =>{
-            startResize(e,'h');
-        }
-        const startResizeVertical = (e) =>{
-            startResize(e,'v');
-        }
-        const startResizeAll = (e) =>{
-            startResize(e,'a');
-        }
-
-        const startResize = (e,type) => {
+        const startResize = (e, type) => {
             e.preventDefault();
+            e.stopPropagation();
 
             const startX = e.clientX;
             const startY = e.clientY;
-
             const startWidth = el.offsetWidth;
             const startHeight = el.offsetHeight;
 
-            const onMove = (e) => {
-                const newWidth = startWidth + (e.clientX - startX);
-                const newHeight = startHeight + (e.clientY - startY);
-
+            const onMove = (moveEvent) => {
+                const newWidth = startWidth + (moveEvent.clientX - startX);
+                const newHeight = startHeight + (moveEvent.clientY - startY);
                 const snappedWidth = Math.round(newWidth / 10) * 10;
                 const snappedHeight = Math.round(newHeight / 10) * 10;
 
-                if (type == 'h' || type == 'a')
+                if (type === 'h' || type === 'a')
                     el.style.width = Math.max(450, snappedWidth) + "px";
-                if (type == 'v' || type == 'a')
+                if (type === 'v' || type === 'a')
                     el.style.height = Math.max(250, snappedHeight) + "px";
             };
 
             const onUp = () => {
-                window.removeEventListener("mousemove", onMove);
-                window.removeEventListener("mouseup", onUp);
+                window.removeEventListener("pointermove", onMove);
+                window.removeEventListener("pointerup", onUp);
+                window.removeEventListener("pointercancel", onUp);
+                document.body.style.cursor = 'default';
             };
 
-            window.addEventListener("mousemove", onMove);
-            window.addEventListener("mouseup", onUp);
+            window.addEventListener("pointermove", onMove);
+            window.addEventListener("pointerup", onUp);
+            window.addEventListener("pointercancel", onUp);
+            document.body.style.cursor = (type === 'h') ? 'ew-resize' : (type === 'v' ? 'ns-resize' : 'nwse-resize');
         };
 
-        console.log("resize-right:", right);
-        console.log("resize-bottom:", bottom);
-        console.log("resize-corner:", corner);
-        right.addEventListener("mousedown", startResizeHorizontal); //horizontal
-        bottom.addEventListener("mousedown", startResizeVertical); //vertical
-        corner.addEventListener("mousedown", startResizeAll); //horizontal and vertical
+        const startResizeHorizontal = (e) => startResize(e, 'h');
+        const startResizeVertical = (e) => startResize(e, 'v');
+        const startResizeAll = (e) => startResize(e, 'a');
+
+        right.addEventListener("pointerdown", startResizeHorizontal);
+        bottom.addEventListener("pointerdown", startResizeVertical);
+        corner.addEventListener("pointerdown", startResizeAll);
     }
 
     toggleMaximize() {

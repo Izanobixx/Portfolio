@@ -377,9 +377,6 @@ export class ComputerWindow extends Window {
         if (!this.sidebarDynamic || !this.sidebarFiles) return;
         const topFolders = this.filesTree.children?.filter(c => c.type === 'folder') || [];
         this.sidebarDynamic.innerHTML = topFolders.map(f => {
-            console.log("RAAAAAAAAAAAAHH");
-            console.log(f.label.trim().toLowerCase());
-            console.log(this.folderIcons[f.label.trim().toLowerCase()]);
             const icon = this.folderIcons[f.label.trim().toLowerCase()] || f.icon;
             return `
                 <div class="folder-item" data-path="/${f.label}">
