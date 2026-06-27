@@ -228,6 +228,24 @@ export class ComputerWindow extends Window {
         this.contentGrid.appendChild(container);
         
         this.contentGrid.style.overflow = 'hidden';
+
+        //if (!this._rickRollDialogShown) {
+            setTimeout( () => {
+                this._rickRollDialogShown = true;
+                if (window.dialogueManager) {
+                    const rickMessages = [
+                        "Te falta calle.",
+                        "Sabía que caerías.",
+                        "No te sientas mal. A mí también me han hecho esto. Muchas veces.",
+                        "El creador de esta web tiene un sentido del humor cuestionable."
+                    ];
+                    const randomMsg = rickMessages[Math.floor(Math.random() * rickMessages.length)];
+                    window.dialogueManager.show([
+                        { speaker: 'RICK ASTLEY', text: randomMsg }
+                    ]);
+                }
+            }, 1500);
+        //}
     }
 
     renderMatrixView() {

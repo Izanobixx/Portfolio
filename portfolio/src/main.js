@@ -5,6 +5,7 @@ import { WindowManager } from './WindowManager';
 import { ComputerWindow } from './windows/ComputerWindow';
 import { DustSystem } from './systems/DustSystem';
 import { InteractionManager } from './InteractionManager';
+import { DialogueManager } from './DialogueManager';
 
 console.log("main.js loaded");
 
@@ -44,7 +45,7 @@ let targetY = 0;
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,1));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 
 // ensure canvas is behind UI overlays
 renderer.domElement.style.position = "fixed";
@@ -257,9 +258,22 @@ animate();
 const windowManager = new WindowManager();
 const interactionManager = new InteractionManager(camera, renderer, clickableObjects, windowManager);
 
-// ==============================
-// VENTANA SUBWAY SURFERS
-// ==============================
+// --------------------
+// DIALOGUE MANAGER
+// --------------------
+
+window.dialogueManager = new DialogueManager();
+
+setTimeout(() => {
+    window.dialogueManager.show([
+        { speaker: 'IZAN', text: 'Bienvenido a mi habitación. Siéntete como en casa. Aquí tengo mis trastos, el ordenador, algunos libros... cotillea lo que quieras.' },
+        { speaker: 'IZAN', text: 'Si ves algo que te llame la atención, haz clic. Igual encuentras algo interesante.' }
+    ]);
+}, 5000);
+
+// --------------------
+// SUBWAY SURFERS
+// --------------------
 
 const subwayWindow = document.getElementById('subway-window');
 const subwayTitlebar = document.getElementById('subway-titlebar');

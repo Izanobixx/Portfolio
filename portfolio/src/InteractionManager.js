@@ -78,12 +78,12 @@ export class InteractionManager{
                 const MusicBookWindow = module.MusicBookWindow;
                 this.windowManager.createWindow(MusicBookWindow, {
                     title: 'Libro de Música.exe',
-                    width: 1200,
-                    height: 900,
-                    x: window.innerWidth / 2 - 600,
-                    y: window.innerHeight / 2 - 450,
-                    originX: event.clientX,
-                    originY: event.clientY
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    x: 0,
+                    y: 0,
+                    originX: 0,
+                    originY: 0
                 });
             });
         }

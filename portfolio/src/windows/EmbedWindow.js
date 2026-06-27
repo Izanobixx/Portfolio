@@ -63,6 +63,7 @@ export class EmbedWindow extends Window {
                     border: none;
                     display: block;
                 `;
+                iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-forms allow-popups');
             }
         } else {
             content.innerHTML = `
