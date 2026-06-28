@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { ComputerWindow } from "./windows/ComputerWindow";
 import { CorkBoardWindow } from "./windows/CorkBoardWindow.js";
 import { EmbedWindow } from "./windows/EmbedWindow.js";
+import { ChatWindow } from "./windows/ChatWindow.js";
 
 export class InteractionManager{
 

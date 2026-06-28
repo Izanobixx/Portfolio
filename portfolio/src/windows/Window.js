@@ -20,6 +20,9 @@ export class Window {
 
         this.content = options.content || '';
 
+        this.imagesData = options.imagesData || [];
+        this.currentImageIndex = options.currentImageIndex || 0;
+
         this.create();
         this.initEvents();
     }

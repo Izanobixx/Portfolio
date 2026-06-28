@@ -11,47 +11,101 @@
       "type": "folder",
       "children": [
         {
-          "id": "Documentos/Simulaci-n-de-Sistemas-P",
-          "label": "Simulaci-n-de-Sistemas-P",
+          "id": "Documentos/Notas_Personales",
+          "label": "Notas_Personales",
           "icon": "📁",
           "type": "folder",
           "children": [
             {
-              "id": "Documentos/Simulaci-n-de-Sistemas-P/.git",
-              "label": ".git",
-              "icon": "📁",
-              "type": "folder",
-              "children": []
-            },
-            {
-              "id": "Documentos/Simulaci-n-de-Sistemas-P/PSystems.nb",
-              "label": "PSystems.nb",
-              "icon": "📎",
-              "type": "file",
-              "url": "/computer/Documentos/Simulaci-n-de-Sistemas-P/PSystems.nb"
-            },
-            {
-              "id": "Documentos/Simulaci-n-de-Sistemas-P/PSystemsTextCode.txt",
-              "label": "PSystemsTextCode.txt",
+              "id": "Documentos/Notas_Personales/Nota1.txt",
+              "label": "Nota1.txt",
               "icon": "📝",
               "type": "text",
-              "url": "/computer/Documentos/Simulaci-n-de-Sistemas-P/PSystemsTextCode.txt"
-            },
-            {
-              "id": "Documentos/Simulaci-n-de-Sistemas-P/SIMULADOR_SISTEMAS_P.pdf",
-              "label": "SIMULADOR_SISTEMAS_P.pdf",
-              "icon": "📄",
-              "type": "pdf",
-              "url": "/computer/Documentos/Simulaci-n-de-Sistemas-P/SIMULADOR_SISTEMAS_P.pdf"
+              "url": "/computer/Documentos/Notas_Personales/Nota1.txt"
             }
           ]
         },
         {
-          "id": "Documentos/3blue1brown.pdf",
-          "label": "3blue1brown.pdf",
-          "icon": "📄",
-          "type": "pdf",
-          "url": "/computer/Documentos/3blue1brown.pdf"
+          "id": "Documentos/Proyectos",
+          "label": "Proyectos",
+          "icon": "📁",
+          "type": "folder",
+          "children": [
+            {
+              "id": "Documentos/Proyectos/Simulaci-n-de-Sistemas-P",
+              "label": "Simulaci-n-de-Sistemas-P",
+              "icon": "📁",
+              "type": "folder",
+              "children": [
+                {
+                  "id": "Documentos/Proyectos/Simulaci-n-de-Sistemas-P/.git",
+                  "label": ".git",
+                  "icon": "📁",
+                  "type": "folder",
+                  "children": []
+                },
+                {
+                  "id": "Documentos/Proyectos/Simulaci-n-de-Sistemas-P/PSystems.nb",
+                  "label": "PSystems.nb",
+                  "icon": "📎",
+                  "type": "file",
+                  "url": "/computer/Documentos/Proyectos/Simulaci-n-de-Sistemas-P/PSystems.nb"
+                },
+                {
+                  "id": "Documentos/Proyectos/Simulaci-n-de-Sistemas-P/PSystemsTextCode.txt",
+                  "label": "PSystemsTextCode.txt",
+                  "icon": "📝",
+                  "type": "text",
+                  "url": "/computer/Documentos/Proyectos/Simulaci-n-de-Sistemas-P/PSystemsTextCode.txt"
+                },
+                {
+                  "id": "Documentos/Proyectos/Simulaci-n-de-Sistemas-P/SIMULADOR_SISTEMAS_P.pdf",
+                  "label": "SIMULADOR_SISTEMAS_P.pdf",
+                  "icon": "📄",
+                  "type": "pdf",
+                  "url": "/computer/Documentos/Proyectos/Simulaci-n-de-Sistemas-P/SIMULADOR_SISTEMAS_P.pdf"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "Documentos/Universidad",
+          "label": "Universidad",
+          "icon": "📁",
+          "type": "folder",
+          "children": [
+            {
+              "id": "Documentos/Universidad/Libros_De_Texto",
+              "label": "Libros_De_Texto",
+              "icon": "📁",
+              "type": "folder",
+              "children": [
+                {
+                  "id": "Documentos/Universidad/Libros_De_Texto/FisicaUniversitariaVolumen1-WEB_JDl3rTk.pdf",
+                  "label": "FisicaUniversitariaVolumen1-WEB_JDl3rTk.pdf",
+                  "icon": "📄",
+                  "type": "pdf",
+                  "url": "/computer/Documentos/Universidad/Libros_De_Texto/FisicaUniversitariaVolumen1-WEB_JDl3rTk.pdf"
+                }
+              ]
+            },
+            {
+              "id": "Documentos/Universidad/Mates",
+              "label": "Mates",
+              "icon": "📁",
+              "type": "folder",
+              "children": [
+                {
+                  "id": "Documentos/Universidad/Mates/3blue1brown.pdf",
+                  "label": "3blue1brown.pdf",
+                  "icon": "📄",
+                  "type": "pdf",
+                  "url": "/computer/Documentos/Universidad/Mates/3blue1brown.pdf"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -267,6 +321,13 @@
               "icon": "🖼️",
               "type": "image",
               "url": "/computer/Imagenes/Universidad/WarmUp.jpeg"
+            },
+            {
+              "id": "Imagenes/Universidad/WhatsApp Image 2026-06-25 at 18.05.40.jpeg",
+              "label": "WhatsApp Image 2026-06-25 at 18.05.40.jpeg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Universidad/WhatsApp Image 2026-06-25 at 18.05.40.jpeg"
             }
           ]
         },

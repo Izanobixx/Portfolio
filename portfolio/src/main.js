@@ -6,6 +6,7 @@ import { ComputerWindow } from './windows/ComputerWindow';
 import { DustSystem } from './systems/DustSystem';
 import { InteractionManager } from './InteractionManager';
 import { DialogueManager } from './DialogueManager';
+import { ChatWindow } from './windows/ChatWindow';
 
 console.log("main.js loaded");
 
@@ -187,6 +188,11 @@ async function finishLoading() {
 
     loadingScreen.remove();
 
+    window.dialogueManager.show([
+        { speaker: 'IZAN', text: 'Bua, qué desordenada tengo la habitación. Todo lleno de trastos, el ordenador, mis instrumentos... ' },
+        { speaker: 'IZAN', text: 'Mientras me pongo a ordenar, voy a rebuscar un poco entre mis cosas. Igual encuentro algo interesante.' }
+    ]);
+
     console.log("loading screen removed");
 }
 
@@ -263,13 +269,6 @@ const interactionManager = new InteractionManager(camera, renderer, clickableObj
 // --------------------
 
 window.dialogueManager = new DialogueManager();
-
-setTimeout(() => {
-    window.dialogueManager.show([
-        { speaker: 'IZAN', text: 'Bienvenido a mi habitación. Siéntete como en casa. Aquí tengo mis trastos, el ordenador, algunos libros... cotillea lo que quieras.' },
-        { speaker: 'IZAN', text: 'Si ves algo que te llame la atención, haz clic. Igual encuentras algo interesante.' }
-    ]);
-}, 5000);
 
 // --------------------
 // SUBWAY SURFERS

@@ -35,6 +35,13 @@ export class ComputerWindow extends Window {
             'no_entrar': '🛑'
         };
 
+        this.folderDialogues = {
+            '/Imagenes/Personal/Nudes' : [{ speaker: 'IZAN', text: 'No sé que pensaba encontrar en esta carpeta, la verdad.' }],
+            '/NO_ENTRAR' : [{ speaker: 'IZAN', text: '¿Qué es esta carpeta?' }],
+            '/NO_ENTRAR/NO_SIGAS/PARA_YA': [{ speaker: 'IZAN', text: '.....' }],
+            '/Documentos/Notas Personales': [{ speaker: 'IZAN', text: 'No recuerdo haber creado esta carpeta...' }]
+        }
+
         this.loadFiles().then(() => {
             this.renderExplorer();
             this.bindEvents();
@@ -90,6 +97,9 @@ export class ComputerWindow extends Window {
         if (this.currentPath !== path) {
             this.history.push(this.currentPath);
         }
+
+        this.ReactToDirectory(path);
+
         this.currentPath = path;
         this.renderItems(items || []);
         this.updateAddress(path);
@@ -441,6 +451,11 @@ export class ComputerWindow extends Window {
         const centerX = window.innerWidth / 2 - width / 2;
         const centerY = window.innerHeight / 2 - height / 2;
 
+        //DIALOGUES
+        if (window.dialogueManager){
+            this.ReactToFile(file.label);
+        }
+
         if (file.type === 'image') {
             const items = this.getItemsAtPath(this.currentPath) || [];
             const images = items.filter(item => item.type === 'image');
@@ -472,10 +487,13 @@ export class ComputerWindow extends Window {
                 y: centerY,
                 originX: centerX,
                 originY: centerY,
-                content: content
+                content: content,
+                imagesData: images,
+                currentImageIndex: currentIndex
             });
 
-            if (images.length > 1) {
+            if (window.dialogueManager && images.length > 1) {
+
                 const img = win.element.querySelector('#image-viewer');
                 const prevBtn = win.element.querySelector('#prev-image');
                 const nextBtn = win.element.querySelector('#next-image');
@@ -487,6 +505,8 @@ export class ComputerWindow extends Window {
                     win.title = images[idx].label;
                     const titleBar = win.element.querySelector('.xp-title');
                     if (titleBar) titleBar.textContent = images[idx].label;
+
+                    this.ReactToFile(images[idx].label);
                 };
 
                 prevBtn.addEventListener('click', (e) => {
@@ -583,7 +603,7 @@ export class ComputerWindow extends Window {
                 break;
         }
 
-        this.manager.createWindow(Window, {
+        const win = this.manager.createWindow(Window, {
             title: title,
             width: width,
             height: height,
@@ -593,5 +613,85 @@ export class ComputerWindow extends Window {
             originY: centerY,
             content: content
         });
+
+        if (window.dialogueManager){
+            this.ReactToCloseFile(file.label, win);
+        }
+    }
+
+    ReactToDirectory(path){
+        if(this.folderDialogues[path]){
+            window.dialogueManager.show(
+                this.folderDialogues[path]
+            );
+        }
+    }
+
+    ReactToFile(fileName){
+        switch(fileName){
+            case 'AmongUsArea.jpeg':
+            window.dialogueManager.show([
+                { speaker: 'IZAN', text: 'Mis amigos de la uni. Tengo ganas de verles mañana.' }
+            ]);
+            break;
+            case 'WarmUp.jpeg':
+            window.dialogueManager.show([
+                { speaker: 'IZAN', text: 'Bua, en esta foto incluso parece que sabemos lo que hacemos.' }
+            ]);
+            break;
+            case 'C4.png':
+            window.dialogueManager.show([
+                { speaker: 'IZAN', text: 'Este es mi frame favorito.' }
+            ]);
+            break;
+            case 'Graduación1.jpg':
+            window.dialogueManager.show([
+                { speaker: 'IZAN', text: 'Desde aquel día, cada uno de nosotros se fue por un camino diferente.' },
+                { speaker: 'IZAN', text: 'Se les echa de menos' }
+            ]);
+            break;
+            case 'Bajo.jpeg':
+            window.dialogueManager.show([
+                { speaker: 'IZAN', text: 'Performative final boss' }
+            ]);
+            break;
+            case 'SML.jpg':
+            window.dialogueManager.show([
+                { speaker: 'IZAN', text: 'Aún recuerdo cuando hice este fangame de Mario Odyssey de LEGO.' },
+                { speaker: 'IZAN', text: 'Menos mal que N1ntend0 nunca lo llegó a ver.' }
+            ]);
+            break;
+            case 'ZombieGame_3.png':
+            window.dialogueManager.show([
+                { speaker: 'IZAN', text: 'Este juego tenía mucho potencial.' },
+                { speaker: 'IZAN', text: 'Un juego de zombies con estética cartoon pero sangrienta. Tenía hasta chat de proximidad' },
+                { speaker: 'IZAN', text: 'Quizás algún día cuando tenga más presupuesto vuelva a él.' }
+            ]);
+            break;
+        }
+    }
+
+    ReactToCloseFile(fileName, win){
+        const originalClose = win.close.bind(win);
+        win.close = function(){
+            switch(fileName){
+                case 'Nota1.txt':
+                    if (window.dialogueManager) {
+                        window.dialogueManager.show([
+                            { speaker: 'IZAN', text: 'Yo no he escrito ese texto.' },
+                            { speaker: 'IZAN', text: 'Debo haberlo descargado sin querer de Internet' }
+                        ]);
+                        setTimeout(() => {
+                            originalClose();
+                        }, 1);
+                    } else {
+                        originalClose();
+                    }
+                    break;
+                default:
+                    originalClose();
+                    break;
+            }
+        };
     }
 }

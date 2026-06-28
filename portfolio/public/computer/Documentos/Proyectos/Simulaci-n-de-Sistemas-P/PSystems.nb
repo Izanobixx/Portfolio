@@ -1,0 +1,1680 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     77358,       1672]
+NotebookOptionsPosition[     75381,       1638]
+NotebookOutlinePosition[     75784,       1654]
+CellTagsIndexPosition[     75741,       1651]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[TextData[{
+ "Vamos a hacer una funci\[OAcute]n que dado un ",
+ StyleBox["sistema P",
+  FontSlant->"Italic"],
+ " y un numero natural ",
+ StyleBox["i",
+  FontSlant->"Italic"],
+ ", ejecute dicho sistema P hasta que pare o hasta realizar n iteraciones de \
+modo ",
+ StyleBox["m\[AAcute]ximamente",
+  IgnoreSpellCheck->True],
+ " paralelo.\nSistema P: \n        {\t",
+ StyleBox["ESTADO INICIAL:",
+  FontWeight->"Bold",
+  FontSlant->"Italic"],
+ "{",
+ StyleBox["n\.ba_membrana",
+  FontWeight->"Bold"],
+ ", s\[IAcute]mbolo_1, s\[IAcute]mbolo_..., {",
+ StyleBox["n\.ba_membrana",
+  FontWeight->"Bold"],
+ ", s\[IAcute]mbolo_1, s\[IAcute]mbolo_..., {",
+ StyleBox["n\.ba_membrana_...",
+  FontWeight->"Bold"],
+ ", s\[IAcute]mbolo_1, ...}, {",
+ StyleBox["n\.ba_membrana_...",
+  FontWeight->"Bold"],
+ ", s\[IAcute]mbolo_1, s\[IAcute]mbolo_...}}}, \n\t",
+ StyleBox["REGLAS:                  ",
+  FontWeight->"Bold",
+  FontSlant->"Italic"],
+ "{{",
+ StyleBox["n\.ba_membrana",
+  FontWeight->"Bold"],
+ ", {regla_1, regla_...},{prioridad_1,prioridad_...}}, {",
+ StyleBox["n\.ba_membrana",
+  FontWeight->"Bold"],
+ ", {regla_1, regla_...},{prioridad_1,prioridad_...}}, ...},\n\t",
+ StyleBox["OUTPUT:",
+  FontWeight->"Bold",
+  FontSlant->"Italic"],
+ "                ",
+ StyleBox["n\.ba_membrana_final",
+  FontWeight->"Bold"],
+ "}\n\td\[OAcute]nde:\n\t\n\t",
+ StyleBox["s\[IAcute]mbolos: ",
+  FontWeight->"Bold"],
+ "los s\[IAcute]mbolos ser\[AAcute]n caracteres en {a,b,...,y,z} en min\
+\[UAcute]scula.\n\t\n\t",
+ StyleBox["n\.ba_membrana",
+  FontWeight->"Bold"],
+ ": debe ser un n\[UAcute]mero entero >0. En el estado inicial, una membrana \
+puede no tener s\[IAcute]mbolos. Y si una membrana no tiene reglas, se \
+representar\[AAcute] como: {n\.ba_membrana,{},{}}\n\t\n\t",
+ StyleBox["regla_n",
+  FontWeight->"Bold"],
+ ": {{s\[IAcute]mbolo_antecedente_1, s\[IAcute]mbolo_antecedente_...}, {s\
+\[IAcute]mbolo_consecuente_1, where_1, s\[IAcute]mbolo_consecuente_..., \
+where_...}}\n\tSe asumir\[AAcute] que los s\[IAcute]mbolos antecedentes y \
+consecuentes son partes del alfabeto, exceptuando \|01d6ff que solo podr\
+\[AAcute] aparecer como consecuente e indicar\[AAcute] que la membrana en la \
+que se encuentra se disolver\[AAcute] (ignorando su correspondiente ",
+ Cell[BoxData[
+  FormBox[
+   StyleBox["where_n",
+    FontSlant->"Italic"], TraditionalForm]],ExpressionUUID->
+  "18e5072b-74f2-4d3a-8042-806604a92f1e"],
+ ").\n\tTambi\[EAcute]n se asumir\[AAcute] que la lista de prioridades tiene \
+el mismo tama\[NTilde]o que la lista de reglas para una membrana, y que la \
+prioridad con \[IAcute]ndice ",
+ StyleBox["i ",
+  FontSlant->"Italic"],
+ "corresponde a la regla con \[IAcute]ndice ",
+ StyleBox["i",
+  FontSlant->"Italic"],
+ " y que cuanto mayor sea el n\[UAcute]mero, mayor prioridad tendr\[AAcute], \
+pudiendo 2 o m\[AAcute]s reglas tener la misma prioridad. \n\t\n\t",
+ StyleBox["where_m",
+  FontWeight->"Bold"],
+ ": es un n\[UAcute]mero entero que indica a qu\[EAcute] membrana se le \
+asignar\[AAcute] el ",
+ StyleBox["s\[IAcute]mbolo_consecuente_m. ",
+  FontSlant->"Italic"],
+ "Si se pone un n\[UAcute]mero > 0, el\.08 s\[IAcute]mbolo se insertar\
+\[AAcute] en dicha membrana (se asumir\[AAcute] que dicha membrana existe). \
+IMPORTANTE NOTAR: Por el bien de la simplicidad, no se comprobar\[AAcute] que \
+la membrana a la que se dirige un s\[IAcute]mbolo consecuente (",
+ StyleBox["where_m",
+  FontSlant->"Italic"],
+ ") sea adyacente, en otras palabras, las reglas pueden insertar \
+s\[IAcute]mbolos desde cualquier membrana a cualquier otra membrana, sin \
+restricciones."
+}], "Text",
+ CellChangeTimes->{{3.9878502976909294`*^9, 3.9878504307671967`*^9}, {
+  3.9878504933277445`*^9, 3.9878505085828114`*^9}, {3.9878506669916325`*^9, 
+  3.987850670819106*^9}, {3.9878507038391423`*^9, 3.987851043338029*^9}, {
+  3.987851166794456*^9, 3.9878514091142135`*^9}, {3.987851524532984*^9, 
+  3.987851625016967*^9}, {3.987851670765417*^9, 3.9878519180256367`*^9}, {
+  3.987851948099901*^9, 3.9878526499174156`*^9}, {3.987852682316921*^9, 
+  3.987852684760529*^9}, {3.9878531765956078`*^9, 3.987853356018855*^9}, {
+  3.9879162590713124`*^9, 
+  3.987916259375299*^9}},ExpressionUUID->"6619facd-a7cd-4cd8-951f-\
+37c61cc92b4d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"--", 
+     RowBox[{"-", " ", 
+      RowBox[{"MAIN", " ", "--"}]}]}], "-"}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"Simulate", "[", 
+      RowBox[{"P_", ",", " ", "iters_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "system", ",", "newSystem", ",", "allRules", ",", 
+         "outputMembraneNumber", ",", "i", ",", "output", ",", 
+         "outputMembrane"}], "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"system", "=", 
+         RowBox[{"P", "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"allRules", "=", 
+         RowBox[{"P", "[", 
+          RowBox[{"[", "2", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"outputMembraneNumber", "=", 
+         RowBox[{"P", "[", 
+          RowBox[{"[", "3", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "1"}], ",", 
+          RowBox[{"i", "<=", "iters"}], ",", 
+          RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Print", "[", 
+            RowBox[{
+            "\"\<ITERATION \>\"", ",", " ", "i", ",", " ", 
+             "\"\<. System state: \>\"", ",", " ", "system"}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"newSystem", "=", 
+            RowBox[{
+             RowBox[{"ExecutionCycle", "[", 
+              RowBox[{
+              "system", ",", "system", ",", "system", ",", "allRules"}], 
+              "]"}], "[", 
+             RowBox[{"[", "2", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"system", "==", "newSystem"}], ",", 
+             RowBox[{"Break", "[", "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"system", "=", "newSystem"}], ";"}]}], 
+         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"Print", "[", 
+         RowBox[{
+         "\"\<Exited after \>\"", ",", " ", "i", ",", " ", 
+          "\"\< iterations: \>\"", ",", " ", "newSystem"}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"output", "=", 
+         RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"outputMembrane", " ", "=", " ", 
+         RowBox[{"GetMembrane", "[", 
+          RowBox[{"outputMembraneNumber", ",", "newSystem"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "2"}], ",", 
+          RowBox[{"i", "<=", 
+           RowBox[{"Length", "[", "outputMembrane", "]"}]}], ",", 
+          RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Length", "[", 
+               RowBox[{"outputMembrane", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "]"}], "==", "0"}], ",", 
+             RowBox[{
+              RowBox[{"AppendTo", "[", 
+               RowBox[{"output", ",", 
+                RowBox[{"outputMembrane", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ";"}]}], "]"}], 
+           ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"Print", "[", 
+         RowBox[{"\"\<OUTPUT: \>\"", ",", " ", "output"}], "]"}], ";"}]}], 
+      "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"--", 
+       RowBox[{"-", " ", "FUNCIONES"}]}], " ", 
+      RowBox[{"ESPECIFICAS", " ", "--"}]}], "-"}], " ", "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"AddSymbolToMembrane", "[", 
+      RowBox[{"symbol_", ",", " ", "membrane_", ",", " ", "system_"}], "]"}], 
+     ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"newSys", ",", "i"}], "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"newSys", " ", "=", " ", "system"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+          RowBox[{
+          "IF", " ", "current", " ", "membrane", " ", "IS", " ", "target", 
+           " ", "membrane"}], " ", "->", " ", 
+          RowBox[{"INSERT", " ", "symbol", " ", "and", " ", "RETURN"}]}], 
+         "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"system", "[", 
+            RowBox[{"[", "1", "]"}], "]"}], " ", "==", " ", "membrane"}], ",", 
+          RowBox[{
+           RowBox[{"Return", "[", 
+            RowBox[{"Insert", "[", 
+             RowBox[{"system", ",", "symbol", ",", "2"}], "]"}], "]"}], 
+           ";"}]}], "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "2"}], ",", " ", 
+          RowBox[{"i", "<=", 
+           RowBox[{"Length", "[", "system", "]"}]}], ",", 
+          RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{
+            RowBox[{"IF", " ", "submembrane", " ", "is", " ", "FOUND"}], " ", 
+            "->", " ", 
+            RowBox[{
+            "REPLACE", " ", "submembrane", " ", "with", " ", "recursion", " ",
+              "call"}]}], "*)"}], "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Length", "[", 
+               RowBox[{"system", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "]"}], " ", ">", " ", "0"}], 
+             ",", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"newSys", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], " ", "=", " ", 
+               RowBox[{"AddSymbolToMembrane", "[", 
+                RowBox[{"symbol", ",", "membrane", ",", 
+                 RowBox[{"system", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}], ";"}]}], "]"}], 
+           ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+          RowBox[{
+          "IF", " ", "all", " ", "submembranes", " ", "have", " ", "been", 
+           " ", "checked"}], " ", "->", " ", "RETURN"}], "*)"}], 
+        "\[IndentingNewLine]", 
+        RowBox[{"Return", "[", "newSys", "]"}], ";"}]}], 
+      "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"RemoveSymbolFromMembrane", "[", 
+      RowBox[{"symbol_", ",", " ", "membrane_", ",", " ", "system_"}], "]"}], 
+     ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"newSys", ",", "i"}], "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"newSys", " ", "=", " ", "system"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+          RowBox[{
+          "IF", " ", "current", " ", "membrane", " ", "IS", " ", "target", 
+           " ", "membrane"}], " ", "->", " ", 
+          RowBox[{"INSERT", " ", "symbol", " ", "and", " ", "RETURN"}]}], 
+         "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"system", "[", 
+            RowBox[{"[", "1", "]"}], "]"}], " ", "==", " ", "membrane"}], ",", 
+          RowBox[{
+           RowBox[{"Return", "[", 
+            RowBox[{"Delete", "[", 
+             RowBox[{"system", ",", 
+              RowBox[{"FirstPosition", "[", 
+               RowBox[{"system", ",", "symbol"}], "]"}]}], "]"}], "]"}], 
+           ";"}]}], "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "2"}], ",", " ", 
+          RowBox[{"i", "<=", 
+           RowBox[{"Length", "[", "system", "]"}]}], ",", 
+          RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{
+            RowBox[{"IF", " ", "submembrane", " ", "is", " ", "FOUND"}], " ", 
+            "->", " ", 
+            RowBox[{
+            "REPLACE", " ", "submembrane", " ", "with", " ", "recursion", " ",
+              "call"}]}], "*)"}], "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Length", "[", 
+               RowBox[{"system", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "]"}], " ", ">", " ", "0"}], 
+             ",", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"newSys", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], " ", "=", " ", 
+               RowBox[{"RemoveSymbolFromMembrane", "[", 
+                RowBox[{"symbol", ",", "membrane", ",", 
+                 RowBox[{"system", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}], ";"}]}], "]"}], 
+           ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+          RowBox[{
+          "IF", " ", "all", " ", "submembranes", " ", "have", " ", "been", 
+           " ", "checked"}], " ", "->", " ", "RETURN"}], "*)"}], 
+        "\[IndentingNewLine]", 
+        RowBox[{"Return", "[", "newSys", "]"}], ";"}]}], 
+      "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"DissolveMembrane", "[", 
+      RowBox[{"membrane_", ",", " ", "system_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"s", ",", "newSys", ",", "i", ",", "j", ",", "lower"}], "}"}],
+        ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"newSys", " ", "=", " ", 
+         RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+          RowBox[{
+          "IF", " ", "current", " ", "membrane", " ", "IS", " ", "target", 
+           " ", "membrane"}], " ", "->", " ", 
+          RowBox[{
+           RowBox[{"CHANGE", " ", "membrane_ID", " ", "to"}], " ", "-", 
+           RowBox[{"1", " ", "and", " ", "RETURN"}]}]}], "*)"}], 
+        "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"system", "[", 
+            RowBox[{"[", "1", "]"}], "]"}], "==", "membrane"}], ",", 
+          RowBox[{
+           RowBox[{"newSys", " ", "=", " ", "system"}], ";", 
+           RowBox[{
+            RowBox[{"newSys", "[", 
+             RowBox[{"[", "1", "]"}], "]"}], "=", 
+            RowBox[{"-", "1"}]}], ";", 
+           RowBox[{"Return", "[", "newSys", "]"}], ";"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+         "FOR", " ", "every", " ", "element", " ", "in", " ", "the", " ", 
+          "current", " ", "membrane"}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "1"}], ",", 
+          RowBox[{"i", "<=", 
+           RowBox[{"Length", "[", "system", "]"}]}], ",", 
+          RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{
+            RowBox[{
+            "IF", " ", "current", " ", "element", " ", "is", " ", "the", " ", 
+             "membrane_ID", " ", "OR", " ", "a", " ", "symbol"}], ",", " ", 
+            RowBox[{"append", " ", "it"}]}], "*)"}], "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Length", "[", 
+               RowBox[{"system", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "]"}], "==", "0"}], ",", " ", 
+             RowBox[{
+              RowBox[{"AppendTo", "[", 
+               RowBox[{"newSys", ",", 
+                RowBox[{"system", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ";"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"(*", "ELSE", "*)"}], "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"lower", " ", "=", " ", 
+               RowBox[{"DissolveMembrane", "[", 
+                RowBox[{"membrane", ",", 
+                 RowBox[{"system", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}], ";", 
+              "\[IndentingNewLine]", 
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"lower", "[", 
+                  RowBox[{"[", "1", "]"}], "]"}], " ", "==", " ", 
+                 RowBox[{"-", "1"}]}], ",", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"For", "[", 
+                  RowBox[{
+                   RowBox[{"j", "=", "2"}], ",", 
+                   RowBox[{"j", "<=", " ", 
+                    RowBox[{"Length", "[", "lower", "]"}]}], ",", 
+                   RowBox[{"j", "++"}], ",", 
+                   RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"newSys", ",", 
+                    RowBox[{"lower", "[", 
+                    RowBox[{"[", "j", "]"}], "]"}]}], "]"}], ";"}]}], "]"}], 
+                 ";"}], ",", "\[IndentingNewLine]", 
+                RowBox[{"(*", "ELSE", "*)"}], "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"AppendTo", "[", 
+                  RowBox[{"newSys", ",", "lower"}], "]"}], ";"}]}], 
+               "\[IndentingNewLine]", "]"}], ";"}]}], "\[IndentingNewLine]", 
+            "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+          RowBox[{
+          "Once", " ", "everything", " ", "has", " ", "been", " ", 
+           "appended"}], ",", " ", 
+          RowBox[{
+          "RETURN", " ", "the", " ", "set", " ", "of", " ", "newSys"}]}], 
+         "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"Return", "[", "newSys", "]"}], ";"}]}], 
+      "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"GetMembrane", "[", 
+      RowBox[{"membrane_", ",", "system_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"i", ",", "foundMembrane"}], "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"system", "[", 
+            RowBox[{"[", "1", "]"}], "]"}], " ", "==", " ", "membrane"}], ",", 
+          RowBox[{
+           RowBox[{"Return", "[", "system", "]"}], ";"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"foundMembrane", "=", 
+         RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "2"}], ",", " ", 
+          RowBox[{"i", "<=", 
+           RowBox[{"Length", "[", "system", "]"}]}], ",", 
+          RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{
+            RowBox[{"IF", " ", "submembrane", " ", "is", " ", "FOUND"}], " ", 
+            "->", " ", 
+            RowBox[{"recursion", " ", "call"}]}], "*)"}], 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Length", "[", 
+               RowBox[{"system", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "]"}], " ", ">", " ", "0"}], 
+             ",", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"foundMembrane", " ", "=", " ", 
+               RowBox[{"GetMembrane", "[", 
+                RowBox[{"membrane", ",", 
+                 RowBox[{"system", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}], ";", 
+              "\[IndentingNewLine]", 
+              RowBox[{"(*", 
+               RowBox[{
+                RowBox[{
+                "IF", " ", "the", " ", "membrane", " ", "has", " ", "been", 
+                 " ", "found", " ", "in", " ", "the", " ", "submembrane"}], 
+                ",", " ", 
+                RowBox[{"RETURN", " ", "it"}]}], "*)"}], 
+              "\[IndentingNewLine]", 
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"Length", "[", "foundMembrane", "]"}], ">", "0"}], 
+                ",", 
+                RowBox[{"Return", "[", "foundMembrane", "]"}]}], "]"}], 
+              ";"}]}], "\[IndentingNewLine]", "]"}], ";"}]}], 
+         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+          RowBox[{
+          "IF", " ", "all", " ", "submembranes", " ", "have", " ", "been", 
+           " ", "checked"}], " ", "->", " ", 
+          RowBox[{"RETURN", " ", "EMPTY", " ", "MEMBRANE"}]}], "*)"}], 
+        "\[IndentingNewLine]", 
+        RowBox[{"Return", "[", 
+         RowBox[{"{", "}"}], "]"}], ";"}]}], "\[IndentingNewLine]", "]"}]}], 
+    ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ContainsAllSymbols", "[", 
+      RowBox[{"symbols_", ",", "required_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"list", ",", "i"}], "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"list", " ", "=", "symbols"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "1"}], ",", 
+          RowBox[{"i", "<=", 
+           RowBox[{"Length", "[", "required", "]"}]}], ",", 
+          RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"ContainsAny", "[", 
+              RowBox[{"list", ",", 
+               RowBox[{"{", 
+                RowBox[{"required", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}], "}"}]}], "]"}], ",", 
+             RowBox[{
+              RowBox[{"list", "=", 
+               RowBox[{"Delete", "[", 
+                RowBox[{"list", ",", 
+                 RowBox[{"FirstPosition", "[", 
+                  RowBox[{"list", ",", 
+                   RowBox[{"required", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}], "]"}]}], ";"}],
+              ",", 
+             RowBox[{
+              RowBox[{"Return", "[", "False", "]"}], ";"}]}], "]"}], ";"}]}], 
+         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"Return", "[", "True", "]"}], ";"}]}], "\[IndentingNewLine]", 
+      "]"}]}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ExecutionCycle", "[", 
+      RowBox[{"sys_", ",", "newSys_", ",", "memb_", ",", "allRules_"}], "]"}],
+      ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "membraneNumber", ",", "system", ",", " ", "newSystem", ",", 
+         "membrane", ",", "i", ",", "output", ",", "rules", ",", 
+         "priorities"}], "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"(*", 
+        RowBox[{"INITIALIZE", " ", "variables"}], "*)"}], 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"system", "=", "sys"}], ";", 
+        RowBox[{"newSystem", "=", "newSys"}], ";", 
+        RowBox[{"membrane", "=", "memb"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"membraneNumber", " ", "=", " ", 
+         RowBox[{"membrane", "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+         "FOR", " ", "every", " ", "element", " ", "in", " ", "this", " ", 
+          "membrane"}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "2"}], ",", 
+          RowBox[{"i", "<=", 
+           RowBox[{"Length", " ", "[", "membrane", "]"}]}], ",", 
+          RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{
+            RowBox[{
+            "IF", " ", "the", " ", "element", " ", "is", " ", "another", " ", 
+             "membrane"}], " ", "->", " ", 
+            RowBox[{"RECURSION", " ", "CALL"}]}], "*)"}], 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Length", "[", 
+               RowBox[{"membrane", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "]"}], ">", "0"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"output", " ", "=", " ", 
+               RowBox[{"ExecutionCycle", "[", 
+                RowBox[{"system", ",", "newSystem", ",", 
+                 RowBox[{"membrane", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], ",", "allRules"}], "]"}]}], 
+              ";", "\[IndentingNewLine]", 
+              RowBox[{"system", " ", "=", " ", 
+               RowBox[{"output", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+              RowBox[{"newSystem", " ", "=", " ", 
+               RowBox[{"output", "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}], ";"}]}], 
+            "\[IndentingNewLine]", "]"}], ";"}]}], "\[IndentingNewLine]", 
+         "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+          RowBox[{"Once", " ", "FOR", " ", "loop", " ", "is", " ", "exited"}],
+           ",", " ", 
+          RowBox[{
+          "there", " ", "are", " ", "NO", " ", "submembranes", " ", "left", 
+           " ", "to", " ", "be", " ", "executed"}], ",", " ", 
+          RowBox[{"then", " ", "execute", " ", "this", " ", "membrane"}]}], 
+         "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"FOR", " ", "every", " ", "set", " ", "of", " ", "rules"}], 
+         "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"rules", " ", "=", " ", 
+         RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"priorities", "=", 
+         RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "1"}], ",", 
+          RowBox[{"i", "<=", 
+           RowBox[{"Length", "[", "allRules", "]"}]}], ",", 
+          RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{
+           "ASSIGN", " ", "corresponding", " ", "rules", " ", "and", " ", 
+            "priorities", " ", "if", " ", "they", " ", "exist"}], "*)"}], 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{"allRules", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], " ", "==", " ", 
+              "membraneNumber"}], ",", " ", 
+             RowBox[{
+              RowBox[{"rules", "=", " ", 
+               RowBox[{
+                RowBox[{"allRules", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}], ";", " ", 
+              RowBox[{"priorities", "=", 
+               RowBox[{
+                RowBox[{"allRules", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}], "[", 
+                RowBox[{"[", "3", "]"}], "]"}]}], ";"}]}], "]"}], ";"}]}], 
+         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"Return", "[", 
+         RowBox[{"MembraneSimulation", "[", 
+          RowBox[{
+          "membraneNumber", ",", "rules", ",", "priorities", ",", "system", 
+           ",", "newSystem"}], "]"}], "]"}], ";"}]}], "\[IndentingNewLine]", 
+      "]"}]}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"MembraneSimulation", "[", 
+      RowBox[{
+      "membrane_", ",", "rul_", ",", "prio_", ",", "sys_", ",", "newSys_"}], 
+      "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "system", ",", "newSystem", ",", "rules", ",", "priorities", ",", 
+         "largestPriorityRulesIndex", ",", "currentIndex", ",", "currentRule",
+          ",", "currentMembrane", ",", "required", ",", "produced", ",", 
+         "where", ",", "appliedRule", ",", "symbolsInMembrane", ",", "i", ",",
+          " ", "dissolve"}], "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"system", "=", "sys"}], ";", 
+        RowBox[{"newSystem", "=", "newSys"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"rules", " ", "=", " ", "rul"}], ";", 
+        RowBox[{"priorities", "=", "prio"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"appliedRule", "=", "False"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"currentIndex", " ", "=", " ", 
+         RowBox[{"-", "1"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"dissolve", " ", "=", " ", "False"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+         "WHILE", " ", "no", " ", "rule", " ", "has", " ", "been", " ", 
+          "applied", " ", "and", " ", "more", " ", "rules", " ", "to", " ", 
+          "be", " ", "applied"}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"While", "[", 
+         RowBox[{
+          RowBox[{"!", "appliedRule"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{
+            RowBox[{
+            "IF", " ", "no", " ", "more", " ", "rules", " ", "to", " ", 
+             "check"}], " ", "->", " ", 
+            RowBox[{"EXIT", " ", "while", " ", "loop"}]}], "*)"}], 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Length", "[", "priorities", "]"}], " ", "==", " ", 
+              "0"}], ",", 
+             RowBox[{
+              RowBox[{"Break", "[", "]"}], ";"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{
+            "STORE", " ", "a", " ", "list", " ", "of", " ", "the", " ", 
+             "highest", " ", "BUT", " ", "SAME", " ", "priority", " ", 
+             "indicies", " ", "of", " ", "rules"}], "*)"}], 
+           "\[IndentingNewLine]", 
+           RowBox[{"largestPriorityRulesIndex", " ", "=", " ", 
+            RowBox[{"Flatten", "[", 
+             RowBox[{"Position", "[", 
+              RowBox[{"priorities", ",", 
+               RowBox[{"Max", "[", "priorities", "]"}]}], "]"}], "]"}]}], ";",
+            "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{
+            "WHILE", " ", "there", " ", "are", " ", "applicable", " ", 
+             "rules", " ", "with", " ", "max", " ", "priority"}], "*)"}], 
+           "\[IndentingNewLine]", 
+           RowBox[{"While", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Length", "[", "largestPriorityRulesIndex", "]"}], ">", 
+              " ", "0"}], ",", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"currentIndex", " ", "=", " ", 
+               RowBox[{
+               "RandomChoice", "[", "largestPriorityRulesIndex", "]"}]}], ";",
+               "\[IndentingNewLine]", 
+              RowBox[{"currentRule", " ", "=", " ", 
+               RowBox[{"rules", "[", 
+                RowBox[{"[", "currentIndex", "]"}], "]"}]}], ";", 
+              "\[IndentingNewLine]", "\[IndentingNewLine]", 
+              RowBox[{"(*", 
+               RowBox[{
+               "GET", " ", "required", " ", "symbols", " ", "for", " ", "the",
+                 " ", "rule"}], "*)"}], "\[IndentingNewLine]", 
+              RowBox[{"required", " ", "=", " ", 
+               RowBox[{"currentRule", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+              RowBox[{"(*", 
+               RowBox[{
+               "GET", " ", "produced", " ", "symbols", " ", "for", " ", "the",
+                 " ", "rule"}], "*)"}], "\[IndentingNewLine]", 
+              RowBox[{"produced", "=", 
+               RowBox[{
+                RowBox[{"currentRule", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}], "[", 
+                RowBox[{"[", 
+                 RowBox[{"1", " ", ";;", " ", ";;", " ", "2"}], "]"}], 
+                "]"}]}], ";", " ", 
+              RowBox[{"(*", 
+               RowBox[{"all", " ", "ODD", " ", "elements"}], "*)"}], 
+              "\[IndentingNewLine]", 
+              RowBox[{"(*", 
+               RowBox[{
+               "GET", " ", "membranes", " ", "where", " ", "produced", " ", 
+                "symbols", " ", "have", " ", "to", " ", "be", " ", "stored"}],
+                "*)"}], "\[IndentingNewLine]", 
+              RowBox[{"where", "=", 
+               RowBox[{
+                RowBox[{"currentRule", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}], "[", 
+                RowBox[{"[", 
+                 RowBox[{"2", " ", ";;", " ", ";;", " ", "2"}], "]"}], 
+                "]"}]}], ";", " ", 
+              RowBox[{"(*", 
+               RowBox[{"all", " ", "EVEN", " ", "elements"}], "*)"}], 
+              "\[IndentingNewLine]", "\[IndentingNewLine]", 
+              RowBox[{"(*", 
+               RowBox[{"GET", " ", "current", " ", "membrane"}], "*)"}], 
+              "\[IndentingNewLine]", 
+              RowBox[{"currentMembrane", " ", "=", " ", 
+               RowBox[{"GetMembrane", "[", 
+                RowBox[{"membrane", ",", "system"}], "]"}]}], ";", 
+              "\[IndentingNewLine]", 
+              RowBox[{"(*", 
+               RowBox[{
+               "GET", " ", "symbols", " ", "in", " ", "current", " ", 
+                "membrane"}], "*)"}], "\[IndentingNewLine]", 
+              RowBox[{"symbolsInMembrane", "=", 
+               RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+              RowBox[{"For", "[", 
+               RowBox[{
+                RowBox[{"i", "=", "2"}], ",", 
+                RowBox[{"i", "<=", 
+                 RowBox[{"Length", "[", "currentMembrane", "]"}]}], ",", 
+                RowBox[{"i", "++"}], ",", 
+                RowBox[{
+                 RowBox[{"If", "[", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"Length", "[", 
+                    RowBox[{"currentMembrane", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], "]"}], "==", "0"}], ",", 
+                   RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"symbolsInMembrane", ",", 
+                    RowBox[{"currentMembrane", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ";"}]}], "]"}], 
+                 ";"}]}], "]"}], ";", "\[IndentingNewLine]", 
+              RowBox[{"(*", 
+               RowBox[{
+                RowBox[{
+                "IF", " ", "required", " ", "symbols", " ", "ar", " ", "in", 
+                 " ", "membrane", " ", "symbols"}], " ", "->", " ", 
+                RowBox[{"APPLY", " ", "RULE"}]}], "*)"}], 
+              "\[IndentingNewLine]", 
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{"ContainsAllSymbols", "[", 
+                 RowBox[{"symbolsInMembrane", ",", "required"}], "]"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"appliedRule", "=", "True"}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"Print", "[", 
+                  RowBox[{
+                  "\"\<    RULE APPLIED IN MEMBRANE \>\"", ",", " ", 
+                   "membrane", ",", "\"\<: \>\"", ",", " ", "required", ",", 
+                   " ", "\"\< -> \>\"", ",", " ", "produced", ",", " ", 
+                   "\"\< to membranes \>\"", " ", ",", " ", "where"}], "]"}], 
+                 ";", "\[IndentingNewLine]", 
+                 RowBox[{"(*", 
+                  RowBox[{
+                  "REMOVE", " ", "ALL", " ", "REQUIRED", " ", "SYMBOLS"}], 
+                  "*)"}], "\[IndentingNewLine]", 
+                 RowBox[{"For", "[", 
+                  RowBox[{
+                   RowBox[{"i", "=", "1"}], ",", 
+                   RowBox[{"i", "<=", 
+                    RowBox[{"Length", "[", "required", "]"}]}], ",", 
+                   RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"system", "=", 
+                    RowBox[{"RemoveSymbolFromMembrane", "[", 
+                    RowBox[{
+                    RowBox[{"required", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], ",", "membrane", ",", 
+                    "system"}], "]"}]}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"newSystem", "=", 
+                    RowBox[{"RemoveSymbolFromMembrane", "[", 
+                    RowBox[{
+                    RowBox[{"required", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], ",", "membrane", ",", 
+                    "newSystem"}], "]"}]}], ";"}]}], "\[IndentingNewLine]", 
+                  "]"}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"(*", 
+                  RowBox[{"ADD", " ", "ALL", " ", "PRODUCT", " ", "SYMBOLS"}],
+                   "*)"}], "\[IndentingNewLine]", 
+                 RowBox[{"For", "[", 
+                  RowBox[{
+                   RowBox[{"i", "=", "1"}], ",", 
+                   RowBox[{"i", "<=", 
+                    RowBox[{"Length", "[", "produced", "]"}]}], ",", 
+                   RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+                   RowBox[{"(*", 
+                    RowBox[{
+                    RowBox[{"IF", " ", "produced", " ", "\|01d6ff"}], " ", "->", 
+                    StyleBox[" ",
+                    FontWeight->"Bold"], 
+                    RowBox[{"mark", " ", "dissolve", " ", "flag"}]}], "*)"}], 
+                   "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    StyleBox["produced",
+                    FontWeight->"Bold"], "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], "===", "\|01d6ff"}], ",", 
+                    RowBox[{"dissolve", " ", "=", " ", "True"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"(*", "ELSE", "*)"}], "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"newSystem", " ", "=", " ", 
+                    RowBox[{"AddSymbolToMembrane", "[", 
+                    RowBox[{
+                    RowBox[{"produced", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], ",", 
+                    RowBox[{"where", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], ",", "newSystem"}], 
+                    "]"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";"}]}], 
+                  "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"(*", 
+                  RowBox[{
+                   RowBox[{"IF", " ", "dissolve", " ", "flag"}], " ", "->", 
+                   " ", "Dissolve"}], "*)"}], "\[IndentingNewLine]", 
+                 RowBox[{"If", "[", 
+                  RowBox[{"dissolve", ",", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{"system", " ", "=", 
+                    RowBox[{"DissolveMembrane", "[", 
+                    RowBox[{"membrane", ",", "system"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"newSystem", "=", 
+                    RowBox[{"DissolveMembrane", "[", 
+                    RowBox[{"membrane", ",", "newSystem"}], "]"}]}], ";"}]}], 
+                  "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
+                ",", "\[IndentingNewLine]", 
+                RowBox[{"(*", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                   "ELSE", " ", "not", " ", "all", " ", "required", " ", 
+                    "symbols"}], " ", "->", " ", 
+                   RowBox[{
+                    RowBox[{
+                    "rule", " ", "cannot", " ", "be", " ", "executed"}], " ", 
+                    "->", " ", 
+                    RowBox[{
+                    "DELETE", " ", "rule", " ", "from", " ", "rules"}]}]}], 
+                  ",", " ", 
+                  RowBox[{
+                  "priority", " ", "from", " ", "priorities", " ", "and", " ",
+                    "currentIndex", " ", "from", " ", 
+                   "largestPriorityRulesIndex"}]}], "*)"}], 
+                "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"For", "[", 
+                  RowBox[{
+                   RowBox[{"i", "=", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"FirstPosition", "[", 
+                    RowBox[{
+                    "largestPriorityRulesIndex", ",", "currentIndex"}], "]"}],
+                     "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "+", "1"}], ")"}]}], ",", 
+                   RowBox[{"i", "<=", 
+                    RowBox[{
+                    "Length", "[", "largestPriorityRulesIndex", "]"}]}], ",", 
+                   RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"largestPriorityRulesIndex", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], "-=", "1"}], ";"}]}], 
+                  "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"largestPriorityRulesIndex", " ", "=", " ", 
+                  RowBox[{"Delete", "[", 
+                   RowBox[{"largestPriorityRulesIndex", ",", 
+                    RowBox[{"FirstPosition", "[", 
+                    RowBox[{
+                    "largestPriorityRulesIndex", ",", "currentIndex"}], 
+                    "]"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"rules", " ", "=", " ", 
+                  RowBox[{"Delete", "[", 
+                   RowBox[{"rules", ",", "currentIndex"}], "]"}]}], ";", 
+                 RowBox[{"priorities", " ", "=", " ", 
+                  RowBox[{"Delete", "[", 
+                   RowBox[{"priorities", ",", "currentIndex"}], "]"}]}], 
+                 ";"}]}], "\[IndentingNewLine]", "]"}], ";"}]}], 
+            RowBox[{"(*", 
+             RowBox[{"END", " ", "IF", " ", "required", " ", "symbols"}], 
+             "*)"}], "\[IndentingNewLine]", "]"}], ";"}]}], 
+         RowBox[{"(*", 
+          RowBox[{
+          "END", " ", "WHILE", " ", "there", " ", "are", " ", "applicable", 
+           " ", "rules", " ", "with", " ", "MAX", " ", "priority"}], "*)"}], 
+         "\[IndentingNewLine]", "]"}], ";", 
+        RowBox[{"(*", 
+         RowBox[{
+         "END", " ", "WHILE", " ", "not", " ", "applied", " ", "rule"}], 
+         "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"Return", "[", 
+         RowBox[{"{", 
+          RowBox[{"system", ",", "newSystem"}], "}"}], "]"}], ";"}]}], 
+      "\[IndentingNewLine]", "]"}]}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"system2", "=", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", 
+       RowBox[{"{", 
+        RowBox[{
+        "2", ",", "a", ",", "a", ",", "a", ",", "a", ",", "a", ",", "a", ",", 
+         "c", ",", "c", ",", "c", ",", "d"}], "}"}], ",", 
+       RowBox[{"{", "3", "}"}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"rule21", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"a", ",", "c"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"e", ",", "2"}], "}"}]}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"rule22", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"a", ",", "e"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"c", ",", "2"}], "}"}]}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"rule23", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", "d", "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"d", ",", "2", ",", "\|01d6ff", ",", "2"}], "}"}]}], "}"}]}], 
+    ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"rule24", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"d", ",", "c", ",", "e"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"n", ",", "3"}], "}"}]}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"rule25", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", "d", "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"s", ",", "3"}], "}"}]}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"prioritiesMembrane2", "=", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "2", ",", "1"}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"prioritiesMembrane1", "=", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "1"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"rules2", "=", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"2", ",", 
+         RowBox[{"{", 
+          RowBox[{"rule21", ",", "rule22", ",", "rule23"}], "}"}], ",", 
+         "prioritiesMembrane2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", 
+         RowBox[{"{", 
+          RowBox[{"rule24", ",", "rule25"}], "}"}], ",", 
+         "prioritiesMembrane1"}], "}"}]}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"P", "=", 
+     RowBox[{"{", 
+      RowBox[{"system2", ",", "rules2", ",", "3"}], "}"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Simulate", "[", 
+     RowBox[{"P", ",", "15"}], "]"}], ";"}], 
+   "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.9878505531967983`*^9, 3.9878505868820915`*^9}, {
+   3.9878529330352163`*^9, 3.9878529887023444`*^9}, {3.9878530970654955`*^9, 
+   3.98785309724685*^9}, 3.987853163264658*^9, {3.9878533890086627`*^9, 
+   3.987853720433219*^9}, {3.987853755956565*^9, 3.987853852867787*^9}, {
+   3.9878538836306667`*^9, 3.987853899831749*^9}, {3.987854247190937*^9, 
+   3.9878543445984077`*^9}, {3.9878543749973793`*^9, 3.987854680716015*^9}, {
+   3.987854726033867*^9, 3.987854741228809*^9}, {3.9878547894145017`*^9, 
+   3.9878552371933966`*^9}, {3.98785528628569*^9, 3.9878554528451614`*^9}, 
+   3.987855486844967*^9, {3.9878555177832203`*^9, 3.987855601176139*^9}, {
+   3.9878556532968526`*^9, 3.987855744511113*^9}, {3.987855783419001*^9, 
+   3.987855803793565*^9}, {3.9878558877154036`*^9, 3.9878559603036075`*^9}, {
+   3.9878560187885914`*^9, 3.9878561248957915`*^9}, {3.9878582080726852`*^9, 
+   3.987858460206514*^9}, {3.987858545159504*^9, 3.9878586016928997`*^9}, {
+   3.9878586544150596`*^9, 3.9878587274203935`*^9}, {3.9878587653779764`*^9, 
+   3.987858770211426*^9}, {3.9878588115414157`*^9, 3.9878589186330314`*^9}, {
+   3.987858959643794*^9, 3.9878590962596464`*^9}, {3.987859185164991*^9, 
+   3.9878591868979588`*^9}, {3.987859235568391*^9, 3.987859501894244*^9}, {
+   3.9878595378332133`*^9, 3.9878597249371*^9}, {3.987859811611948*^9, 
+   3.9878598361319933`*^9}, {3.987859896706895*^9, 3.9878600643544507`*^9}, {
+   3.9878603216416564`*^9, 3.987860460661188*^9}, {3.9878605028122773`*^9, 
+   3.9878605076167855`*^9}, {3.9878605513113155`*^9, 
+   3.9878605903511047`*^9}, {3.98786068402872*^9, 3.9878609843674736`*^9}, {
+   3.9878610291953826`*^9, 3.9878612580181684`*^9}, {3.9878614374918423`*^9, 
+   3.987861551423676*^9}, {3.9878616020130577`*^9, 3.9878617748824005`*^9}, {
+   3.9878629641744385`*^9, 3.9878630698761034`*^9}, {3.98786312990895*^9, 
+   3.9878636550486608`*^9}, {3.987863735060295*^9, 3.987863759623528*^9}, {
+   3.987863804841897*^9, 3.9878640105082436`*^9}, {3.987864041708539*^9, 
+   3.9878640783310704`*^9}, {3.9878641192721252`*^9, 3.987864219846009*^9}, {
+   3.9878645321651597`*^9, 3.9878645336935186`*^9}, {3.9878646737029066`*^9, 
+   3.9878647942034187`*^9}, {3.987868389004142*^9, 3.987868467501972*^9}, {
+   3.987868620153507*^9, 3.987868620225247*^9}, {3.987868670148897*^9, 
+   3.9878687295698137`*^9}, {3.98786879345691*^9, 3.987868820437234*^9}, {
+   3.987868893497576*^9, 3.987868949435484*^9}, {3.987869071235365*^9, 
+   3.987869177688658*^9}, {3.987869231929491*^9, 3.987869242093218*^9}, {
+   3.987869500215747*^9, 3.9878695753350067`*^9}, {3.9878701266522036`*^9, 
+   3.987870275521395*^9}, {3.9878703326090155`*^9, 3.987870339452262*^9}, {
+   3.987870388195925*^9, 3.9878703974992886`*^9}, {3.9878704657797155`*^9, 
+   3.9878705427893066`*^9}, {3.9878706015223775`*^9, 3.987870889250083*^9}, {
+   3.98787096198232*^9, 3.98787099071663*^9}, {3.987871057036353*^9, 
+   3.987871069475125*^9}, {3.987871161403644*^9, 3.98787117634297*^9}, {
+   3.9878712433703365`*^9, 3.98787124362083*^9}, {3.987871302916344*^9, 
+   3.987871382142748*^9}, {3.9878714131380486`*^9, 3.987871425405512*^9}, {
+   3.987871481793422*^9, 3.9878716449732966`*^9}, {3.9878716848154507`*^9, 
+   3.987871717818224*^9}, {3.9878717530008764`*^9, 3.9878718088734922`*^9}, {
+   3.987871843268808*^9, 3.987871878963909*^9}, {3.9878719244633245`*^9, 
+   3.987871927520421*^9}, {3.987876443290284*^9, 3.9878764678203535`*^9}, {
+   3.9878765687201443`*^9, 3.987876573433487*^9}, {3.987876711871295*^9, 
+   3.9878767461862698`*^9}, {3.9878767764439516`*^9, 3.987876811639519*^9}, {
+   3.987876906140771*^9, 3.9878769198682795`*^9}, {3.9878770030231543`*^9, 
+   3.9878770410886765`*^9}, {3.987877100280305*^9, 3.9878771453637714`*^9}, {
+   3.987877179274732*^9, 3.9878771916189766`*^9}, 3.987877231378182*^9, {
+   3.987877267461261*^9, 3.9878772884510803`*^9}, {3.9878773272876325`*^9, 
+   3.9878773640546017`*^9}, {3.9878774005578156`*^9, 
+   3.9878774190151277`*^9}, {3.9878775465622406`*^9, 
+   3.9878775629326844`*^9}, {3.987877884350165*^9, 3.9878778944414425`*^9}, {
+   3.987877959166631*^9, 3.9878779630912704`*^9}, {3.987878067390397*^9, 
+   3.987878094779336*^9}, {3.9878782225249724`*^9, 3.987878314971558*^9}, {
+   3.9878783997020535`*^9, 3.9878784909091144`*^9}, {3.9878785239270215`*^9, 
+   3.987878528213343*^9}, {3.98787855844284*^9, 3.9878786066693087`*^9}, {
+   3.9878786374630804`*^9, 3.987878674185423*^9}, {3.9878788025251904`*^9, 
+   3.987878935127193*^9}, {3.987878972050044*^9, 3.987879366118229*^9}, {
+   3.9878794083202252`*^9, 3.9878794438823442`*^9}, {3.987879582753536*^9, 
+   3.9878795996807413`*^9}, {3.987879631839438*^9, 3.987879633246872*^9}, {
+   3.987879687456401*^9, 3.9878796932959547`*^9}, {3.9878797705070972`*^9, 
+   3.987879771209179*^9}, {3.9878798089372215`*^9, 3.9878798200222435`*^9}, {
+   3.9878798552279634`*^9, 3.9878800644122305`*^9}, {3.9878800945538335`*^9, 
+   3.9878803775018425`*^9}, {3.9878804248015723`*^9, 
+   3.9878804362536526`*^9}, {3.9878804708361588`*^9, 
+   3.9878804718635244`*^9}, {3.987880539394212*^9, 3.987880568720209*^9}, {
+   3.987880726835495*^9, 3.9878807486151156`*^9}, {3.987880808168887*^9, 
+   3.987880945838353*^9}, {3.987880978894186*^9, 3.9878810275482435`*^9}, {
+   3.987881200622083*^9, 3.987881239924266*^9}, {3.987913893538993*^9, 
+   3.9879140128359337`*^9}, {3.987914078436658*^9, 3.9879143715362034`*^9}, {
+   3.987914409567889*^9, 3.9879144241973753`*^9}, {3.9879145317275887`*^9, 
+   3.987914537476453*^9}, {3.987914570601281*^9, 3.98791471465056*^9}, {
+   3.987914803007207*^9, 3.9879148546132402`*^9}, {3.9879148889894223`*^9, 
+   3.9879149086458626`*^9}, {3.9879153222514753`*^9, 3.987915636678975*^9}, {
+   3.9879157703827944`*^9, 3.9879158001168437`*^9}, {3.987915894247362*^9, 
+   3.9879158960181513`*^9}, {3.98792321598353*^9, 3.9879232270383635`*^9}, {
+   3.987948537370081*^9, 3.9879486624660673`*^9}},
+ CellLabel->
+  "In[737]:=",ExpressionUUID->"9830bf7e-9936-4239-9e58-5af0ef54d722"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"ITERATION \"\>", "\[InvisibleSpace]", "1", 
+   "\[InvisibleSpace]", "\<\". System state: \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "2", ",", "a", ",", "a", ",", "a", ",", "a", ",", "a", ",", "a", ",", 
+       "c", ",", "c", ",", "c", ",", "d"}], "}"}], ",", 
+     RowBox[{"{", "3", "}"}]}], "}"}]}],
+  SequenceForm[
+  "ITERATION ", 1, ". System state: ", {
+   1, {2, $CellContext`a, $CellContext`a, $CellContext`a, $CellContext`a, \
+$CellContext`a, $CellContext`a, $CellContext`c, $CellContext`c, \
+$CellContext`c, $CellContext`d}, {3}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.9879486631866045`*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"b3fed751-2474-45aa-89ee-d0615ccba64d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"    RULE APPLIED IN MEMBRANE \"\>", "\[InvisibleSpace]", "2", 
+   "\[InvisibleSpace]", "\<\": \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "c"}], "}"}], "\[InvisibleSpace]", "\<\" -> \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "e", "}"}], "\[InvisibleSpace]", "\<\" to membranes \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "2", "}"}]}],
+  SequenceForm[
+  "    RULE APPLIED IN MEMBRANE ", 2, ": ", {$CellContext`a, $CellContext`c}, 
+   " -> ", {$CellContext`e}, " to membranes ", {2}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.987948663190137*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"3ca2413f-a1c7-4827-890e-7c458b061d03"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"    RULE APPLIED IN MEMBRANE \"\>", "\[InvisibleSpace]", "2", 
+   "\[InvisibleSpace]", "\<\": \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "c"}], "}"}], "\[InvisibleSpace]", "\<\" -> \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "e", "}"}], "\[InvisibleSpace]", "\<\" to membranes \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "2", "}"}]}],
+  SequenceForm[
+  "    RULE APPLIED IN MEMBRANE ", 2, ": ", {$CellContext`a, $CellContext`c}, 
+   " -> ", {$CellContext`e}, " to membranes ", {2}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.987948663194131*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"610b2bd0-93e8-4b8c-960c-5ba0b282f09b"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"    RULE APPLIED IN MEMBRANE \"\>", "\[InvisibleSpace]", "2", 
+   "\[InvisibleSpace]", "\<\": \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "c"}], "}"}], "\[InvisibleSpace]", "\<\" -> \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "e", "}"}], "\[InvisibleSpace]", "\<\" to membranes \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "2", "}"}]}],
+  SequenceForm[
+  "    RULE APPLIED IN MEMBRANE ", 2, ": ", {$CellContext`a, $CellContext`c}, 
+   " -> ", {$CellContext`e}, " to membranes ", {2}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.9879486631961308`*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"bc6290fb-afce-4766-a562-24a97aa78cd6"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"ITERATION \"\>", "\[InvisibleSpace]", "2", 
+   "\[InvisibleSpace]", "\<\". System state: \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "2", ",", "e", ",", "e", ",", "e", ",", "a", ",", "a", ",", "a", ",", 
+       "d"}], "}"}], ",", 
+     RowBox[{"{", "3", "}"}]}], "}"}]}],
+  SequenceForm[
+  "ITERATION ", 2, ". System state: ", {
+   1, {2, $CellContext`e, $CellContext`e, $CellContext`e, $CellContext`a, \
+$CellContext`a, $CellContext`a, $CellContext`d}, {3}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.9879486631986403`*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"380aeff8-2879-4f4a-b303-28c2d06910c6"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"    RULE APPLIED IN MEMBRANE \"\>", "\[InvisibleSpace]", "2", 
+   "\[InvisibleSpace]", "\<\": \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "e"}], "}"}], "\[InvisibleSpace]", "\<\" -> \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "c", "}"}], "\[InvisibleSpace]", "\<\" to membranes \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "2", "}"}]}],
+  SequenceForm[
+  "    RULE APPLIED IN MEMBRANE ", 2, ": ", {$CellContext`a, $CellContext`e}, 
+   " -> ", {$CellContext`c}, " to membranes ", {2}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.9879486632006407`*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"3d9be5a3-d210-43c1-98a3-ad81f9b424bc"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"    RULE APPLIED IN MEMBRANE \"\>", "\[InvisibleSpace]", "2", 
+   "\[InvisibleSpace]", "\<\": \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "e"}], "}"}], "\[InvisibleSpace]", "\<\" -> \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "c", "}"}], "\[InvisibleSpace]", "\<\" to membranes \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "2", "}"}]}],
+  SequenceForm[
+  "    RULE APPLIED IN MEMBRANE ", 2, ": ", {$CellContext`a, $CellContext`e}, 
+   " -> ", {$CellContext`c}, " to membranes ", {2}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.987948663202642*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"26b574c0-8263-4534-9881-869717f6dab0"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"    RULE APPLIED IN MEMBRANE \"\>", "\[InvisibleSpace]", "2", 
+   "\[InvisibleSpace]", "\<\": \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "e"}], "}"}], "\[InvisibleSpace]", "\<\" -> \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "c", "}"}], "\[InvisibleSpace]", "\<\" to membranes \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "2", "}"}]}],
+  SequenceForm[
+  "    RULE APPLIED IN MEMBRANE ", 2, ": ", {$CellContext`a, $CellContext`e}, 
+   " -> ", {$CellContext`c}, " to membranes ", {2}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.9879486632056403`*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"e3d15a3f-23ea-461c-9a6d-1ff43b5bd84c"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"ITERATION \"\>", "\[InvisibleSpace]", "3", 
+   "\[InvisibleSpace]", "\<\". System state: \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "c", ",", "c", ",", "c", ",", "d"}], "}"}], ",", 
+     RowBox[{"{", "3", "}"}]}], "}"}]}],
+  SequenceForm[
+  "ITERATION ", 3, ". System state: ", {
+   1, {2, $CellContext`c, $CellContext`c, $CellContext`c, $CellContext`d}, {
+    3}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.9879486632076406`*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"19828c9d-30b0-4cad-960b-552d260ffcbb"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"    RULE APPLIED IN MEMBRANE \"\>", "\[InvisibleSpace]", "2", 
+   "\[InvisibleSpace]", "\<\": \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", "d", "}"}], "\[InvisibleSpace]", "\<\" -> \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"d", ",", "\|01d6ff"}], "}"}], 
+   "\[InvisibleSpace]", "\<\" to membranes \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "2"}], "}"}]}],
+  SequenceForm[
+  "    RULE APPLIED IN MEMBRANE ", 2, ": ", {$CellContext`d}, 
+   " -> ", {$CellContext`d, $CellContext`\|01d6ff}, " to membranes ", {2, 2}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.9879486632101555`*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"bcff4ce8-1660-45dd-92da-ea9cb6edc99a"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"ITERATION \"\>", "\[InvisibleSpace]", "4", 
+   "\[InvisibleSpace]", "\<\". System state: \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "d", ",", "c", ",", "c", ",", "c", ",", 
+     RowBox[{"{", "3", "}"}]}], "}"}]}],
+  SequenceForm[
+  "ITERATION ", 4, ". System state: ", {
+   1, $CellContext`d, $CellContext`c, $CellContext`c, $CellContext`c, {3}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.987948663212153*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"bd4b223b-882c-486b-b60c-b2f59179239d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"    RULE APPLIED IN MEMBRANE \"\>", "\[InvisibleSpace]", "1", 
+   "\[InvisibleSpace]", "\<\": \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", "d", "}"}], "\[InvisibleSpace]", "\<\" -> \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "s", "}"}], "\[InvisibleSpace]", "\<\" to membranes \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", "3", "}"}]}],
+  SequenceForm[
+  "    RULE APPLIED IN MEMBRANE ", 1, ": ", {$CellContext`d}, 
+   " -> ", {$CellContext`s}, " to membranes ", {3}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.987948663214156*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"25264b87-9ef5-4b3d-b7ba-39c4be834ada"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"ITERATION \"\>", "\[InvisibleSpace]", "5", 
+   "\[InvisibleSpace]", "\<\". System state: \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "c", ",", "c", ",", "c", ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "s"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "ITERATION ", 5, ". System state: ", {
+   1, $CellContext`c, $CellContext`c, $CellContext`c, {3, $CellContext`s}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.9879486632151546`*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"14ae6879-74e4-48b8-bbd0-30b8a4b9bc6d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Exited after \"\>", "\[InvisibleSpace]", "5", 
+   "\[InvisibleSpace]", "\<\" iterations: \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "c", ",", "c", ",", "c", ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "s"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Exited after ", 5, " iterations: ", {
+   1, $CellContext`c, $CellContext`c, $CellContext`c, {3, $CellContext`s}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.98794866321766*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"b1dea916-e037-4913-a506-4b4b7e5cbf47"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"OUTPUT: \"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", "s", "}"}]}],
+  SequenceForm["OUTPUT: ", {$CellContext`s}],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.9878804977595463`*^9, {3.9878805414366674`*^9, 3.9878805776066494`*^9}, {
+   3.987880735079377*^9, 3.987880749297949*^9}, {3.9878808272552705`*^9, 
+   3.987880946724516*^9}, {3.9878809862292185`*^9, 3.987881029285672*^9}, 
+   3.9879137326102066`*^9, 3.9879139671647563`*^9, 3.987914464041177*^9, 
+   3.9879145380742984`*^9, {3.9879145711373243`*^9, 3.987914577988948*^9}, {
+   3.9879146992466774`*^9, 3.9879147152152185`*^9}, 3.9879148133924723`*^9, 
+   3.987914855207364*^9, {3.987914893451172*^9, 3.987914909144971*^9}, {
+   3.987915369536398*^9, 3.9879153881759353`*^9}, {3.987915530226982*^9, 
+   3.987915577231635*^9}, {3.987915626503778*^9, 3.987915637589922*^9}, {
+   3.9879158012695017`*^9, 3.9879158039488373`*^9}, 3.987915896897107*^9, {
+   3.987923219105883*^9, 3.9879232274312983`*^9}, {3.987948559233283*^9, 
+   3.987948663220665*^9}},
+ CellLabel->
+  "Durante la evaluaci\[OAcute]n de \
+In[737]:=",ExpressionUUID->"517d7235-f83a-4695-bcdc-91239eb6e0a2"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1440, 741.75},
+WindowMargins->{{-6, Automatic}, {Automatic, -6}},
+FrontEndVersion->"13.3 para Microsoft Windows (64-bit) (July 24, 2023)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"7191b353-d320-4b84-85e8-f12e5f460838"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 4214, 102, 472, "Text",ExpressionUUID->"6619facd-a7cd-4cd8-951f-37c61cc92b4d"],
+Cell[CellGroupData[{
+Cell[4797, 126, 47460, 1051, 4673, "Input",ExpressionUUID->"9830bf7e-9936-4239-9e58-5af0ef54d722"],
+Cell[CellGroupData[{
+Cell[52282, 1181, 1677, 32, 22, "Print",ExpressionUUID->"b3fed751-2474-45aa-89ee-d0615ccba64d"],
+Cell[53962, 1215, 1587, 29, 22, "Print",ExpressionUUID->"3ca2413f-a1c7-4827-890e-7c458b061d03"],
+Cell[55552, 1246, 1587, 29, 22, "Print",ExpressionUUID->"610b2bd0-93e8-4b8c-960c-5ba0b282f09b"],
+Cell[57142, 1277, 1589, 29, 22, "Print",ExpressionUUID->"bc6290fb-afce-4766-a562-24a97aa78cd6"],
+Cell[58734, 1308, 1597, 31, 22, "Print",ExpressionUUID->"380aeff8-2879-4f4a-b303-28c2d06910c6"],
+Cell[60334, 1341, 1589, 29, 22, "Print",ExpressionUUID->"3d9be5a3-d210-43c1-98a3-ad81f9b424bc"],
+Cell[61926, 1372, 1587, 29, 22, "Print",ExpressionUUID->"26b574c0-8263-4534-9881-869717f6dab0"],
+Cell[63516, 1403, 1589, 29, 22, "Print",ExpressionUUID->"e3d15a3f-23ea-461c-9a6d-1ff43b5bd84c"],
+Cell[65108, 1434, 1507, 29, 22, "Print",ExpressionUUID->"19828c9d-30b0-4cad-960b-552d260ffcbb"],
+Cell[66618, 1465, 1631, 30, 22, "Print",ExpressionUUID->"bcff4ce8-1660-45dd-92da-ea9cb6edc99a"],
+Cell[68252, 1497, 1442, 26, 22, "Print",ExpressionUUID->"bd4b223b-882c-486b-b60c-b2f59179239d"],
+Cell[69697, 1525, 1546, 28, 22, "Print",ExpressionUUID->"25264b87-9ef5-4b3d-b7ba-39c4be834ada"],
+Cell[71246, 1555, 1461, 27, 22, "Print",ExpressionUUID->"14ae6879-74e4-48b8-bbd0-30b8a4b9bc6d"],
+Cell[72710, 1584, 1458, 27, 22, "Print",ExpressionUUID->"b1dea916-e037-4913-a506-4b4b7e5cbf47"],
+Cell[74171, 1613, 1182, 21, 22, "Print",ExpressionUUID->"517d7235-f83a-4695-bcdc-91239eb6e0a2"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
