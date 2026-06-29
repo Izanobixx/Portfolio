@@ -19,6 +19,8 @@ export class PlayerController {
         this.isTransitioning = false;
         this.pendingAction = null;
 
+        this.targetLocation = null;
+
         this.animations = {};
         this.currentAnimation = null;
         this.setUpAnimations(clips);
@@ -27,10 +29,11 @@ export class PlayerController {
     getPOIConfig(name) {
         const configs = {
             'GO_Computer': { location: 'computer' },
-            'GO_Piano': { location: 'piano' },
+            'GO_Keyboard': { location: 'keyboard' },
             'GO_Corcho': { location: 'corcho' },
-            'GO_Videogames': { location: 'games' },
-            'GO_Bed': { location: 'bed' }
+            'GO_Games': { location: 'games' },
+            'GO_Bed': { location: 'bed' },
+            'GO_Shelf': { location: 'shelf' }
         };
         return configs[name] || null;
     }
@@ -68,9 +71,7 @@ export class PlayerController {
             console.warn('Animación "stand_start" no encontrada. No se podrá levantar.');
         }
 
-        const locations = ['computer', 'piano', 'corcho', 'games', 'bed'];
-        const animSufix = ['idle', 'sit', 'stand', 'off_bed'];
-
+        const locations = ['computer', 'keyboard', 'corcho', 'games', 'bed', 'shelf'];
         locations.forEach(loc => {
             ['idle', 'sit', 'stand'].forEach(type => {
                 const name = `${type}_${loc}`;
@@ -97,6 +98,10 @@ export class PlayerController {
         return null;
     }
 
+    isMoving(){
+        return this.isMoving;
+    }
+
     moveTo(position, callback) {
         if (this.isStarting && !this.hasStarted) {
             this.pendingAction = { type: 'move', position, callback };
@@ -115,10 +120,6 @@ export class PlayerController {
         this.targetPosition.copy(position);
         const distance = this.model.position.distanceTo(this.targetPosition);
         if (distance < 0.01) {
-            if (callback) {
-                callback();
-                this._moveCallback = null;
-            }
             return;
         }
         this.isMoving = true;
@@ -153,7 +154,6 @@ export class PlayerController {
 
         this.isTransitioning = true;
         const duration = standAnim.getClip().duration || 6250;
-        console.log("DURATION: " + duration)
         this.playAnimation('stand_start');
         setTimeout(() => {
             this.isTransitioning = false;
@@ -186,10 +186,19 @@ export class PlayerController {
             return;
         }
 
-        // Si ya estamos en esa ubicación, ejecutar callback directamente
-        if (this.currentLocation === config.location) {
-            if (callback) callback();
-            return;
+        // Si ya estamos en esa ubicación O ya estamos yendo hacia ella, ejecutar callback directamente
+        if (!this.isMoving){
+            if (this.currentLocation === config.location || this.targetLocation === config.location) {
+                // Si ya está en camino, no abrir ahora; se abrirá al llegar
+                // Pero si queremos abrir al llegar, debemos encolar
+                if (this.targetLocation === config.location) {
+                    // Está en camino, encolar para abrir al llegar
+                    this.pendingAction = { type: 'poi', name, config, callback };
+                    return;
+                }
+                if (callback) callback();
+                return;
+            }
         }
 
         // Si estamos en otra ubicación, intentar stand de la actual
@@ -201,9 +210,12 @@ export class PlayerController {
                 this.playAnimation(standAnim);
                 setTimeout(() => {
                     this.isTransitioning = false;
-                    // Continuar con el movimiento
+                    // Establecer targetLocation antes de moverse
+                    this.targetLocation = config.location;
                     this.moveTo(this.goPositions[name], () => {
                         this.arriveToLocation(config);
+                        // Limpiar targetLocation al llegar
+                        this.targetLocation = null;
                         if (callback) callback();
                     });
                 }, 1000); // Ajustar según duración
@@ -212,21 +224,21 @@ export class PlayerController {
         }
 
         // Movimiento directo
+        this.targetLocation = config.location;
         this.moveTo(this.goPositions[name], () => {
             this.arriveToLocation(config);
+            this.targetLocation = null;
             if (callback) callback();
         });
     }
 
     arriveToLocation(config) {
-                                                                console.log("SHOULD ARRIVE HERE1");
         const loc = config.location;
         this.currentLocation = loc;
         // Intentar reproducir sit
         const sitAnim = this.getLocationAnimation(loc, 'sit');
         if (sitAnim) {
             this.playAnimation(sitAnim);
-            // Después de sentarse, pasar a idle de la ubicación
             setTimeout(() => {
                 const idleAnim = this.getLocationAnimation(loc, 'idle');
                 if (idleAnim) {
@@ -236,12 +248,10 @@ export class PlayerController {
                 }
             }, 800);
         } else {
-                                                                                console.log("SHOULD ARRIVE HERE2");
             const idleAnim = this.getLocationAnimation(loc, 'idle');
             if (idleAnim) {
                 this.playAnimation(idleAnim);
             } else {
-                                                                                                console.log("SHOULD ARRIVE HERE3");
                 this.playAnimation('idle');
             }
         }
@@ -289,21 +299,26 @@ export class PlayerController {
                     this._moveCallback();
                     this._moveCallback = null;
                 }
-                // No cambiar a idle aquí, se maneja en arriveToLocation
             }
         }
 
         if (this.mixer) this.mixer.update(delta);
     }
 
+    getCurrentLocation() {
+        return this.currentLocation;
+    }
+
+    isAtLocation(location) {
+        return this.currentLocation === location;
+    }
+
     playAnimation(name, fadeTime = 0.2) {
         if (this.currentAnimation === name) return;
-        // Buscar la animación por nombre
         let anim = null;
         if (this.animations[name]) {
             anim = this.animations[name];
         } else {
-            // Buscar en las ubicaciones
             for (const loc in this.animations) {
                 if (this.animations[loc] && this.animations[loc][name]) {
                     anim = this.animations[loc][name];

@@ -847,3 +847,30 @@ canvas {
 .xp-window.frameless .resize-handle {
     display: none !important;
 }
+
+.tv-screen {
+    position: relative;
+}
+.tv-screen::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 2px, transparent 2px, transparent 4px);
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0.4;
+}
+
+.tv-screen-content::-webkit-scrollbar {
+    width: 6px;
+}
+.tv-screen-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+.tv-screen-content::-webkit-scrollbar-thumb {
+    background: #00ff41;
+    border-radius: 3px;
+}

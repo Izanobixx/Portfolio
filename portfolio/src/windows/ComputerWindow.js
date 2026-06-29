@@ -1,4 +1,5 @@
 import { Window } from "./Window";
+import { cableManager } from "../CableManager.js";
 
 export class ComputerWindow extends Window {
     constructor(manager, options = {}) {
@@ -46,7 +47,13 @@ export class ComputerWindow extends Window {
             this.renderExplorer();
             this.bindEvents();
             this.navigateTo('/');
+            this.updateConnectorVisibility('/')
         });
+
+        const content = this.element.querySelector('.xp-content');
+        if (content) {
+            content.style.overflow = 'visible';
+        }
     }
     
 
@@ -105,6 +112,8 @@ export class ComputerWindow extends Window {
         this.updateAddress(path);
         this.updateStatus();
         this.highlightSidebar(path);
+
+        this.updateConnectorVisibility(path);
     }
 
     goBack() {
@@ -399,6 +408,233 @@ export class ComputerWindow extends Window {
                 if (e.key === 'Enter') goHandler();
             });
         }
+    }
+
+    updateConnectorVisibility(path) {
+        cableManager.onConnect(null);
+        
+        // Eliminar cualquier contenedor anterior
+        const oldContainer = this.element.querySelector('.connector-container');
+        if (oldContainer) {
+            oldContainer.remove();
+        }
+        // Limpiar intervalo de glitch si existe
+        if (this._glitchInterval) {
+            clearInterval(this._glitchInterval);
+            this._glitchInterval = null;
+        }
+
+        // Restaurar el grid si estaba oculto
+        if (this.contentGrid) {
+            this.contentGrid.style.display = '';
+        }
+
+        // Solo mostrar en la carpeta /Documentos/Test
+        if (this.currentPath !== '/Documentos/Test') {
+            return;
+        }
+
+        // Ocultar el grid
+        if (this.contentGrid) {
+            this.contentGrid.style.display = 'none';
+        }
+
+        // Crear contenedor centrado
+        const container = document.createElement('div');
+        container.className = 'connector-container';
+        container.style.cssText = `
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            padding: 30px;
+            gap: 20px;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            margin: 0px;
+            min-height: 200px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+            font-family: 'Courier New', monospace;
+        `;
+
+        // Texto de instrucción críptico
+        const instructionText = document.createElement('div');
+        instructionText.style.cssText = `
+            font-size: 14px;
+            color: #88aa88;
+            text-align: center;
+            user-select: none;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            font-weight: 300;
+        `;
+        instructionText.textContent = '> CONEXIÓN DE DATOS REQUERIDA';
+
+        // Subtexto con glitch
+        const subText = document.createElement('div');
+        subText.style.cssText = `
+            font-size: 12px;
+            color: #ce4646;
+            text-align: center;
+            user-select: none;
+            letter-spacing: 1px;
+            margin-top: 4px;
+            font-style: italic;
+            font-family: 'Courier New', monospace;
+        `;
+        const prefix = '// Enlace físico requerido. Id de dispositivo destino: [';
+        const suffix = ']';
+        subText.innerHTML = `${prefix}${this.generateGlitchString()}${suffix}`;
+
+        container.appendChild(instructionText);
+        container.appendChild(subText);
+
+        // Conector (igual que antes)
+        const connector = document.createElement('div');
+        connector.id = 'cable-connector';
+        connector.style.cssText = `
+            width: 48px;
+            height: 48px;
+            background: #111;
+            border: 2px solid #556655;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(85, 102, 85, 0.2), inset 0 0 15px rgba(85, 102, 85, 0.1);
+            transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            user-select: none;
+        `;
+        cableManager.onConnect(() => {
+            this.handleCableConnected();
+        });
+
+        const dot = document.createElement('div');
+        dot.style.cssText = `
+            width: 10px;
+            height: 10px;
+            background: #88aa88;
+            border-radius: 50%;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+            box-shadow: 0 0 12px rgba(136, 170, 136, 0.4);
+        `;
+        connector.appendChild(dot);
+
+        connector.addEventListener('mouseenter', () => {
+            connector.style.transform = 'scale(1.08)';
+            connector.style.boxShadow = '0 0 30px rgba(85, 102, 85, 0.4), inset 0 0 20px rgba(85, 102, 85, 0.2)';
+            connector.style.borderColor = '#88aa88';
+            dot.style.opacity = '1';
+        });
+        connector.addEventListener('mouseleave', () => {
+            connector.style.transform = 'scale(1)';
+            connector.style.boxShadow = '0 0 20px rgba(85, 102, 85, 0.2), inset 0 0 15px rgba(85, 102, 85, 0.1)';
+            connector.style.borderColor = '#556655';
+            dot.style.opacity = '0.6';
+        });
+
+        connector.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            if (cableManager) {
+                cableManager.startDrag(connector);
+            } else {
+                console.warn('CableManager no inicializado');
+            }
+        });
+
+        container.appendChild(connector);
+
+        // Insertar en el cuerpo del explorador
+        const explorerBody = this.element.querySelector('.xp-explorer-body');
+        if (explorerBody) {
+            explorerBody.appendChild(container);
+        }
+
+        // Iniciar glitch
+        this._glitchInterval = setInterval(() => {
+            if (subText) {
+                const glitch = this.generateGlitchString();
+                subText.innerHTML = `${prefix}${glitch}${suffix}`;
+            }
+        }, 120);
+    }
+
+    handleCableConnected() {
+        // Llamar a GameWindow si existe
+        if (window.gameWindowInstance && typeof window.gameWindowInstance.showConnectionSuccess === 'function') {
+            window.gameWindowInstance.showConnectionSuccess();
+        } else {
+            console.warn('GameWindow no encontrada o no tiene showConnectionSuccess');
+        }
+
+        // También actualizar el contenedor de conexión (la ventana de "> CONEXIÓN DE DATOS REQUERIDA")
+        const container = this.element.querySelector('.connector-container');
+        if (container) {
+            container.style.borderColor = '#00ff00';
+            container.style.boxShadow = 'inset 0 0 30px rgb(0, 255, 0), 0 0 30px rgba(35, 202, 35, 0.57)';
+            const subText = container.querySelector('div:nth-child(2)');
+            if (subText) {
+                subText.style.color = '#00ff00';
+                subText.textContent = '// Enlace físico establecido. Dispositivo destino: [Game_Child]';
+            }
+            // Cambiar el texto de instrucción
+            const instructionText = container.querySelector('div:first-child');
+            if (instructionText) {
+                instructionText.textContent = '> CONEXIÓN COMPLETA';
+                instructionText.style.color = '#88aa88';
+            }
+            // Eliminar intervalo de glitch
+            if (this._glitchInterval) {
+                clearInterval(this._glitchInterval);
+                this._glitchInterval = null;
+            }
+        }
+    }
+
+    showConnectionSuccess(container) {
+        const successMsg = document.createElement('div');
+        successMsg.style.cssText = `
+            font-size: 13px;
+            color: #88aa88;
+            text-align: center;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+            border-top: 1px solid #88aa88;
+            padding-top: 10px;
+            width: 100%;
+        `;
+        successMsg.textContent = '> Conexión establecida. Transferencia de datos iniciada.';
+        container.appendChild(successMsg);
+
+        // También mostrar en el grid si está visible (por si acaso)
+        if (this.contentGrid) {
+            this.contentGrid.style.display = 'grid'; // Mostrar grid con mensaje
+            this.contentGrid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #88aa88; font-family: 'Courier New', monospace; font-size: 16px; background: #0a0a0a; border: 1px solid #88aa88; border-radius: 4px;">
+                    ✅ Conexión establecida con Game Child.<br>
+                    <span style="font-size: 14px; opacity: 0.7;">Transferencia de datos iniciada...</span>
+                </div>
+            `;
+        }
+    }
+
+    generateGlitchString(length = 10) {
+        const chars = '!@#$%^&*()_+-=[]{}|;:,.>/?TontoElQueLoLea';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        if (result.length < length) return this.generateGlitchString(length);
+        console.log(result);
+        return result;
     }
 
     buildSidebar() {

@@ -5,6 +5,7 @@ import { EmbedWindow } from "./windows/EmbedWindow.js";
 import { ChatWindow } from "./windows/ChatWindow.js";
 import { PostItCreatorWindow } from "./windows/PostItCreatorWindow.js";
 import { MusicBookWindow } from "./windows/MusicBookWindow.js";
+import { GameWindow } from "./windows/GameWindow.js";
 
 export class InteractionManager{
 
@@ -64,19 +65,26 @@ export class InteractionManager{
 
     handleObject(object,event){
         if(object.name.includes("Computer")){    
-            if (this.izanController){
+            /*if (this.izanController){
                 this.izanController.moveToGO('GO_Computer', () => {
-                    console.log("HERE");
                     this.windowManager.createWindow(ComputerWindow,{title:"Computer.exe",width:700,height:400, originX:event.clientX, originY:event.clientY});
                 });
             }
-            else{
+            else{*/
                 this.windowManager.createWindow(ComputerWindow,{title:"Computer.exe",width:700,height:400, originX:event.clientX, originY:event.clientY});
-            }
+            //}
         }
         if (object.name.includes('Corcho')) {
-            const corkWin = this.windowManager.createWindow(CorkBoardWindow, {title: 'Corcho.exe',width: 700,height: 450,x: window.innerWidth / 2 - 650,y: window.innerHeight / 2 - 225,originX: event.clientX,originY: event.clientY});
+            if (this.izanController){
+                this.izanController.moveToGO('GO_Corcho', () => {
+                    const corkWin = this.windowManager.createWindow(CorkBoardWindow, {title: 'Corcho.exe',width: 700,height: 450,x: window.innerWidth / 2 - 650,y: window.innerHeight / 2 - 225,originX: event.clientX,originY: event.clientY});
+                    this.windowManager.createWindow(PostItCreatorWindow, {title: 'Nueva_nota.exe',width: 400,height: 450,x: window.innerWidth / 2 + 150,y: window.innerHeight / 2 - 225,originX: event.clientX,originY: event.clientY,corchoWindow: corkWin});
+                });
+            }
+            else{
+                const corkWin = this.windowManager.createWindow(CorkBoardWindow, {title: 'Corcho.exe',width: 700,height: 450,x: window.innerWidth / 2 - 650,y: window.innerHeight / 2 - 225,originX: event.clientX,originY: event.clientY});
             this.windowManager.createWindow(PostItCreatorWindow, {title: 'Nueva_nota.exe',width: 400,height: 450,x: window.innerWidth / 2 + 150,y: window.innerHeight / 2 - 225,originX: event.clientX,originY: event.clientY,corchoWindow: corkWin});
+            }
         }
         if (object.name.includes('Keyboard')){
             
@@ -102,6 +110,50 @@ export class InteractionManager{
                     y: 0,
                     originX: 0,
                     originY: 0
+                });
+            }
+        }
+        if (object.name.includes('Games')){
+            let gameWin = null;
+            /*if (this.izanController){
+                this.izanController.moveToGO('GO_Games', () => {
+                    gameWin = this.windowManager.createWindow(GameWindow, {
+                        title: 'Game_child.exe',
+                        width: 500,
+                        height: 800,
+                        x: window.innerWidth / 2 - 250,
+                        y: window.innerHeight / 2 - 400,
+                        originX: event.clientX,
+                        originY: event.clientY
+                    });
+                });
+            }
+            else{*/
+                gameWin = this.windowManager.createWindow(GameWindow, {
+                    title: 'Game_child.exe',
+                    width: 500,
+                    height: 800,
+                    x: window.innerWidth / 2 - 250,
+                    y: window.innerHeight / 2 - 400,
+                    originX: event.clientX,
+                    originY: event.clientY
+                });
+            //}
+            if (gameWin){
+                window.gameWindowInstance = gameWin;
+            }
+        }
+        if (object.name.includes('Shelf')){
+            if (this.izanController){
+                this.izanController.moveToGO('GO_Shelf', () => {
+                    this.windowManager.createWindow(ComputerWindow,{title:"Computer.exe",width:700,height:400, originX:event.clientX, originY:event.clientY});
+                });
+            }
+        }
+        if (object.name.includes('Bed')){
+            if (this.izanController){
+                this.izanController.moveToGO('GO_Bed', () => {
+                    this.windowManager.createWindow(ComputerWindow,{title:"Computer.exe",width:700,height:400, originX:event.clientX, originY:event.clientY});
                 });
             }
         }

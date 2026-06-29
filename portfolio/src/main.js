@@ -128,7 +128,7 @@ loader.load(
                 // Añadir a objetos clickeables
                 if (child.name.includes("Computer") || child.name.includes("Keyboard") || 
                     child.name.includes("Bed") || child.name.includes("Shelf") || 
-                    child.name.includes("Videogames") || child.name.includes("Corcho")) {
+                    child.name.includes("Games") || child.name.includes("Corcho")) {
                     clickableObjects.push(child);
                 }
 

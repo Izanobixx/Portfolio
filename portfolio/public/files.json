@@ -70,6 +70,13 @@
           ]
         },
         {
+          "id": "Documentos/Test",
+          "label": "Test",
+          "icon": "📁",
+          "type": "folder",
+          "children": []
+        },
+        {
           "id": "Documentos/Universidad",
           "label": "Universidad",
           "icon": "📁",
