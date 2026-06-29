@@ -7,8 +7,7 @@ import { DustSystem } from './systems/DustSystem';
 import { InteractionManager } from './InteractionManager';
 import { DialogueManager } from './DialogueManager';
 import { ChatWindow } from './windows/ChatWindow';
-
-console.log("main.js loaded");
+import { PlayerController } from './PlayerController';
 
 // --------------------
 // LOADING SCREEN
@@ -22,6 +21,7 @@ console.log("loadingScreen:", loadingScreen);
 // --------------------
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87ceeb);
+const clock = new THREE.Clock();
 
 // --------------------
 // CAMERA
@@ -89,7 +89,11 @@ let minTimePassed = false;
 // LOAD MODEL
 // --------------------
 let fan;
+let pendulum;
+let foundNames = [];
+let izanController = null;
 const clickableObjects = [];
+const goPositions = {};
 
 loader.load(
     '/models/room.glb',
@@ -97,61 +101,100 @@ loader.load(
     function (gltf) {
         console.log("model loaded");
 
-        const model = gltf.scene;
+        let model = gltf.scene;
 
-        model.traverse((child)=>{
-
-            if (child.name == "Fan"){
+        // ---- Recorrer el modelo ----
+        model.traverse((child) => {
+            // Guardar objetos especiales
+            if (child.name === "Fan") {
                 fan = child;
             }
+            if (child.name === "Pendulum") {
+                pendulum = child;
+            }
             
+            // Guardar posiciones GO_
+            if (child.name && child.name.startsWith('GO_')) {
+                const localPos = child.position.clone();
+                goPositions[child.name] = localPos;
+            }
 
-            if (child.isMesh){
-
-                //update bounding box manually to avoid fing collision erros
+            // Procesar mallas
+            if (child.isMesh) {
                 child.geometry.computeBoundingBox();
                 child.geometry.computeBoundingSphere();
                 child.updateMatrixWorld(true);
 
-                console.log("FOUND: " + child.name);
-                if (child.name.includes("Computer") || child.name.includes("Keyboard") || child.name.includes("Bed") || child.name.includes("Shelf") || child.name.includes("Videogames") || child.name.includes("Corcho")){
-                    
+                // Añadir a objetos clickeables
+                if (child.name.includes("Computer") || child.name.includes("Keyboard") || 
+                    child.name.includes("Bed") || child.name.includes("Shelf") || 
+                    child.name.includes("Videogames") || child.name.includes("Corcho")) {
                     clickableObjects.push(child);
-                } 
+                }
 
-                child.material = new THREE.MeshStandardMaterial({map: child.material.map});
-
+                // Configurar material
                 const material = child.material;
-
-                if (child.name.includes("Emissive"))
-                {
-                    child.material.emissive = new THREE.Color(0xDF5D09);
-                    child.material.emissiveIntensity = 100;
-                }
-                if (child.name.includes("EmissiveGreen")){
-                    child.material.emissive = new THREE.Color(0x11ff11);
-                    child.material.emissiveIntensity = 50;
-                }
-
-                if (material.map && material.map.image){
-                    material.transparent = true;
-                    material.alphaTest = 0.75;
-                    material.needsUpdate = true;
-                    if (material.transparent){
-                        material.side = THREE.DoubleSide;
+                if (material) {
+                    child.material = new THREE.MeshStandardMaterial({ map: material.map });
+                    if (child.name.includes("Emissive")) {
+                        child.material.emissive = new THREE.Color(0xDF5D09);
+                        child.material.emissiveIntensity = 100;
+                    }
+                    if (child.name.includes("EmissiveGreen")) {
+                        child.material.emissive = new THREE.Color(0x11ff11);
+                        child.material.emissiveIntensity = 50;
+                    }
+                    if (material.map && material.map.image) {
+                        child.material.transparent = true;
+                        child.material.alphaTest = 0.75;
+                        child.material.needsUpdate = true;
+                        if (child.material.transparent) {
+                            child.material.side = THREE.DoubleSide;
+                        }
                     }
                 }
             }
         });
 
+        let izanRoot = null;
+        let izanMesh = null;
+
+        model.traverse((child) => {
+            if ((child.type === 'Armature' || child.type === 'Group' || child.type === 'Object3D') && child.name === 'Izan') {
+                izanRoot = child;
+            }
+        });
+
+        if (izanRoot && !izanMesh) {
+            izanRoot.traverse((child) => {
+                if (child.isSkinnedMesh && !izanMesh) {
+                    izanMesh = child;
+                }
+            });
+        }
+
+        if (izanRoot && izanMesh) {
+            const mixer = new THREE.AnimationMixer(izanRoot);
+            const clips = gltf.animations;
+            izanController = new PlayerController(izanRoot, mixer, clips, goPositions);
+        }
+
+
+        // ---- Configurar el modelo en la escena ----
         model.position.set(0, 0, 0);
         model.scale.set(0.6, 0.6, 0.6);
         model.rotation.y = 3 * Math.PI / 2;
-
         scene.add(model);
 
         modelLoaded = true;
         tryFinishLoading();
+
+        // ---- Inicializar gestores de ventanas e interacción ----
+        const windowManager = new WindowManager();
+        const interactionManager = new InteractionManager(camera, renderer, clickableObjects, windowManager, izanController);
+        
+        // Opcional: guardar referencia a interactionManager para usar después
+        window.interactionManager = interactionManager;
     },
 
     undefined,
@@ -238,10 +281,19 @@ window.addEventListener(
 function animate() {
     requestAnimationFrame(animate);
 
+    const delta = clock.getDelta();
+
+    if (izanController) {
+        izanController.update(delta);
+    }
+
     dust.update();
     updateCameraRotAndPos();
     if (fan){
-        fan.rotation.y += 0.05;
+        fan.rotation.y += 0.05 * delta * 60;
+    }
+    if (pendulum){
+        pendulum.rotation.x = Math.sin(clock.getElapsedTime()*2) * 0.1;
     }
 
     renderer.render(scene, camera);
@@ -256,13 +308,6 @@ function updateCameraRotAndPos(){
 }
 
 animate();
-
-// --------------------
-// COMPUTER WINDOWS
-// --------------------
-
-const windowManager = new WindowManager();
-const interactionManager = new InteractionManager(camera, renderer, clickableObjects, windowManager);
 
 // --------------------
 // DIALOGUE MANAGER

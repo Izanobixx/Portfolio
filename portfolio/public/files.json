@@ -11,17 +11,17 @@
       "type": "folder",
       "children": [
         {
-          "id": "Documentos/Notas_Personales",
-          "label": "Notas_Personales",
+          "id": "Documentos/Observaciones",
+          "label": "Observaciones",
           "icon": "📁",
           "type": "folder",
           "children": [
             {
-              "id": "Documentos/Notas_Personales/Nota1.txt",
+              "id": "Documentos/Observaciones/Nota1.txt",
               "label": "Nota1.txt",
               "icon": "📝",
               "type": "text",
-              "url": "/computer/Documentos/Notas_Personales/Nota1.txt"
+              "url": "/computer/Documentos/Observaciones/Nota1.txt"
             }
           ]
         },
@@ -377,13 +377,6 @@
       "icon": "📁",
       "type": "folder",
       "children": []
-    },
-    {
-      "id": "TontoElQueNoLoLea.txt",
-      "label": "TontoElQueNoLoLea.txt",
-      "icon": "📝",
-      "type": "text",
-      "url": "/computer/TontoElQueNoLoLea.txt"
     }
   ]
 }

@@ -18,7 +18,7 @@ export const conversation = [
     { speaker: "NULL", delay: 3000}, 
     { speaker: "IZAN", text: "Estás diciendo que estoy en una nave ahora mismo?", delay: 3623},
     { speaker: "YOU", text: "Técnicamente sí. La nave contiene solo información digital. Escaneos de cerebros simulados dentro de entornos pequeños. El espacio en el que te encuentras es un mundo virtual que tú mismo creaste para poder mantener a tu consciencia digital tranquila."},
-    { speaker: "YOU", text: "Aparentemente no disponíais de mucha capacidad de almacenamiento, unos pocos petabytes de memoria para almacenar a la humanidad entera. De ahí vienen las limitaciones de tu simulación."},
+    { speaker: "YOU", text: "Aparentemente no disponíais de mucha capacidad de almacenamiento, unos pocos yottabytes de memoria para almacenar a la humanidad entera. De ahí vienen las limitaciones de tu simulación."},
     { speaker: "NULL", delay: 2745}, 
     { speaker: "IZAN", text: "Entonces...", delay: 1483},
     { speaker: "NULL", delay: 1038}, 

@@ -3,19 +3,41 @@ import { ComputerWindow } from "./windows/ComputerWindow";
 import { CorkBoardWindow } from "./windows/CorkBoardWindow.js";
 import { EmbedWindow } from "./windows/EmbedWindow.js";
 import { ChatWindow } from "./windows/ChatWindow.js";
+import { PostItCreatorWindow } from "./windows/PostItCreatorWindow.js";
+import { MusicBookWindow } from "./windows/MusicBookWindow.js";
 
 export class InteractionManager{
 
-    constructor(camera, renderer, objects, windowManager){
+    constructor(camera, renderer, objects, windowManager, izanController){
         this.camera = camera;
         this.renderer = renderer;
         this.objects = objects;
         this.windowManager = windowManager;
+        this.izanController = izanController;
 
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
 
         this.init();
+
+        //this.openChatForDebug();
+    }
+
+    openChatForDebug() {
+        console.log('Abriendo chat para debug');
+        const width = 800;
+        const height = 500;
+        const x = window.innerWidth / 2 - width / 2;
+        const y = window.innerHeight / 2 - height / 2;
+        this.windowManager.createWindow(ChatWindow, {
+            title: "Comunicador.exe",
+            width: width,
+            height: height,
+            x: x,
+            y: y,
+            originX: x,
+            originY: y
+        });
     }
 
     init(){
@@ -41,42 +63,37 @@ export class InteractionManager{
     }
 
     handleObject(object,event){
-        if(object.name.includes("Computer")){
-            this.windowManager.createWindow(ComputerWindow,{title:"Computer.exe",width:700,height:400, originX:event.clientX, originY:event.clientY});
+        if(object.name.includes("Computer")){    
+            if (this.izanController){
+                this.izanController.moveToGO('GO_Computer', () => {
+                    console.log("HERE");
+                    this.windowManager.createWindow(ComputerWindow,{title:"Computer.exe",width:700,height:400, originX:event.clientX, originY:event.clientY});
+                });
+            }
+            else{
+                this.windowManager.createWindow(ComputerWindow,{title:"Computer.exe",width:700,height:400, originX:event.clientX, originY:event.clientY});
+            }
         }
         if (object.name.includes('Corcho')) {
-            import('./windows/CorkBoardWindow.js').then(module => {
-                const CorkBoardWindow = module.CorkBoardWindow;
-                const corkWin = this.windowManager.createWindow(CorkBoardWindow, {
-                    title: 'Corcho.exe',
-                    width: 700,
-                    height: 450,
-                    x: window.innerWidth / 2 - 650,
-                    y: window.innerHeight / 2 - 225,
-                    originX: event.clientX,
-                    originY: event.clientY
-                });
-                import('./windows/PostItCreatorWindow.js').then(module2 => {
-                    const PostItCreatorWindow = module2.PostItCreatorWindow;
-                    this.windowManager.createWindow(PostItCreatorWindow, {
-                        title: 'Nueva_nota.exe',
-                        width: 400,
-                        height: 450,
-                        x: window.innerWidth / 2 + 150,
-                        y: window.innerHeight / 2 - 225,
-                        originX: event.clientX,
-                        originY: event.clientY,
-                        corchoWindow: corkWin
-                    });
-                });
-            });
+            const corkWin = this.windowManager.createWindow(CorkBoardWindow, {title: 'Corcho.exe',width: 700,height: 450,x: window.innerWidth / 2 - 650,y: window.innerHeight / 2 - 225,originX: event.clientX,originY: event.clientY});
+            this.windowManager.createWindow(PostItCreatorWindow, {title: 'Nueva_nota.exe',width: 400,height: 450,x: window.innerWidth / 2 + 150,y: window.innerHeight / 2 - 225,originX: event.clientX,originY: event.clientY,corchoWindow: corkWin});
         }
         if (object.name.includes('Keyboard')){
-            //const embedCode = `<iframe id="score-iframe" width="100%" height="100%" src="https://musescore.com/user/29082442/scores/24891487/embed" frameborder="0" allowfullscreen allow="autoplay; fullscreen"></iframe>`
-            //this.windowManager.createWindow(EmbedWindow, {title: 'Euforia.msc', width:700, height:500, x: event.clientX, y: event.clientY, originX: event.clientX, originY: event.clientY, embedCode: embedCode});
-        
-            import('./windows/MusicBookWindow.js').then(module => {
-                const MusicBookWindow = module.MusicBookWindow;
+            
+            if (this.izanController){
+                this.izanController.moveToGO('GO_Keyboard', () => {
+                    this.windowManager.createWindow(MusicBookWindow, {
+                        title: 'Libro de Música.exe',
+                        width: window.innerWidth,
+                        height: window.innerHeight,
+                        x: 0,
+                        y: 0,
+                        originX: 0,
+                        originY: 0
+                    });
+                });
+            }
+            else{
                 this.windowManager.createWindow(MusicBookWindow, {
                     title: 'Libro de Música.exe',
                     width: window.innerWidth,
@@ -86,7 +103,7 @@ export class InteractionManager{
                     originX: 0,
                     originY: 0
                 });
-            });
+            }
         }
     }
 

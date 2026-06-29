@@ -39,7 +39,7 @@ export class ComputerWindow extends Window {
             '/Imagenes/Personal/Nudes' : [{ speaker: 'IZAN', text: 'No sé que pensaba encontrar en esta carpeta, la verdad.' }],
             '/NO_ENTRAR' : [{ speaker: 'IZAN', text: '¿Qué es esta carpeta?' }],
             '/NO_ENTRAR/NO_SIGAS/PARA_YA': [{ speaker: 'IZAN', text: '.....' }],
-            '/Documentos/Notas Personales': [{ speaker: 'IZAN', text: 'No recuerdo haber creado esta carpeta...' }]
+            '/Documentos/Observaciones': [{ speaker: 'IZAN', text: 'Qué es esta carpeta?..' }]
         }
 
         this.loadFiles().then(() => {
@@ -678,8 +678,8 @@ export class ComputerWindow extends Window {
                 case 'Nota1.txt':
                     if (window.dialogueManager) {
                         window.dialogueManager.show([
-                            { speaker: 'IZAN', text: 'Yo no he escrito ese texto.' },
-                            { speaker: 'IZAN', text: 'Debo haberlo descargado sin querer de Internet' }
+                            { speaker: 'IZAN', text: 'No recuerdo haber escrito ese texto.' },
+                            { speaker: 'IZAN', text: 'Debo haberlo descargado sin querer de Internet.' }
                         ]);
                         setTimeout(() => {
                             originalClose();
