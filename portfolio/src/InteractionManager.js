@@ -67,11 +67,11 @@ export class InteractionManager{
         if(object.name.includes("Computer")){    
             /*if (this.izanController){
                 this.izanController.moveToGO('GO_Computer', () => {
-                    this.windowManager.createWindow(ComputerWindow,{title:"Computer.exe",width:700,height:400, originX:event.clientX, originY:event.clientY});
+                    this.windowManager.createWindow(ComputerWindow,{title:"Computer.exe",width:700,height:400, x:window.innerWidth / 2 - 350, y:window.innerHeight / 2 - 200, originX:event.clientX, originY:event.clientY});
                 });
             }
             else{*/
-                this.windowManager.createWindow(ComputerWindow,{title:"Computer.exe",width:700,height:400, originX:event.clientX, originY:event.clientY});
+                this.windowManager.createWindow(ComputerWindow,{title:"Computer.exe",width:700,height:400, x:window.innerWidth / 2 - 350, y:window.innerHeight / 2 - 200, originX:event.clientX, originY:event.clientY});
             //}
         }
         if (object.name.includes('Corcho')) {

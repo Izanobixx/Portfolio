@@ -1,5 +1,5 @@
 import { Window } from "./Window";
-import { cableManager } from "../CableManager.js";
+import { CableManager } from "../CableManager.js";
 
 export class ComputerWindow extends Window {
     constructor(manager, options = {}) {
@@ -29,6 +29,9 @@ export class ComputerWindow extends Window {
         this.selectedFile = null;
         this.selectedElement = null;
 
+        this.cableManager = null;
+        this.cablePath = '/Documentos/Test';
+
         this.folderIcons = {
             'documentos': '📎',
             'imagenes': '🖼️',
@@ -54,6 +57,15 @@ export class ComputerWindow extends Window {
         if (content) {
             content.style.overflow = 'visible';
         }
+
+        this._gameWindowClosedHandler = (e) => {
+            const closedWin = e.detail.window;
+            if (this.cableManager && this.cableManager.isConnected && this.cableManager.connectedGameWindow === closedWin) {
+                this.cableManager.disconnect();
+                this.updateConnectorVisibility(this.currentPath);
+            }
+        };
+        document.addEventListener('gameWindowClosed', this._gameWindowClosedHandler);
     }
     
 
@@ -103,6 +115,11 @@ export class ComputerWindow extends Window {
         const items = this.getItemsAtPath(path);
         if (this.currentPath !== path) {
             this.history.push(this.currentPath);
+        }
+        const wasInTest = this.currentPath && this.currentPath.includes(this.cablePath);
+        const isInTest = path.includes(this.cablePath);
+        if (wasInTest && !isInTest && this.cableManager && this.cableManager.isConnected) {
+            this.cableManager.disconnect();
         }
 
         this.ReactToDirectory(path);
@@ -411,7 +428,21 @@ export class ComputerWindow extends Window {
     }
 
     updateConnectorVisibility(path) {
-        cableManager.onConnect(null);
+
+        if (!this.currentPath.includes(this.cablePath)) {
+            if (this.cableManager && this.cableManager.isConnected) {
+                this.cableManager.disconnect();
+            }
+            const oldContainer = this.element.querySelector('.connector-container');
+            if (oldContainer) oldContainer.remove();
+            // Restaurar grid
+            if (this.contentGrid) this.contentGrid.style.display = '';
+            return;
+        }
+
+        if (!this.cableManager) {
+            this.cableManager = new CableManager(() => {this.handleCableConnected();});
+        }
         
         // Eliminar cualquier contenedor anterior
         const oldContainer = this.element.querySelector('.connector-container');
@@ -430,7 +461,7 @@ export class ComputerWindow extends Window {
         }
 
         // Solo mostrar en la carpeta /Documentos/Test
-        if (this.currentPath !== '/Documentos/Test') {
+        if (this.currentPath !== this.cablePath) {
             return;
         }
 
@@ -510,9 +541,6 @@ export class ComputerWindow extends Window {
             position: relative;
             user-select: none;
         `;
-        cableManager.onConnect(() => {
-            this.handleCableConnected();
-        });
 
         const dot = document.createElement('div');
         dot.style.cssText = `
@@ -541,8 +569,8 @@ export class ComputerWindow extends Window {
 
         connector.addEventListener('pointerdown', (e) => {
             e.stopPropagation();
-            if (cableManager) {
-                cableManager.startDrag(connector);
+            if (this.cableManager) {
+                this.cableManager.startDrag(connector);
             } else {
                 console.warn('CableManager no inicializado');
             }
@@ -632,8 +660,6 @@ export class ComputerWindow extends Window {
         for (let i = 0; i < length; i++) {
             result += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        if (result.length < length) return this.generateGlitchString(length);
-        console.log(result);
         return result;
     }
 
@@ -929,5 +955,14 @@ export class ComputerWindow extends Window {
                     break;
             }
         };
+    }
+
+    close(){
+        document.removeEventListener('gameWindowClosed', this._gameWindowClosedHandler);
+        if (this.cableManager) {
+            this.cableManager.destroy();
+            this.cableManager = null;
+        }
+        super.close();
     }
 }
