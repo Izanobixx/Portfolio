@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "generate-files": "node systems/generate-files.js",
     "predeploy": "vite build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist -f"
   },
   "devDependencies": {
     "gh-pages": "^6.3.0",
