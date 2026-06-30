@@ -32,7 +32,7 @@ export class DustSystem{
         }
 
         geometry.setAttribute("position", new THREE.BufferAttribute(positions,3));
-        const texture = new THREE.TextureLoader().load("/textures/particle.png");
+        const texture = new THREE.TextureLoader().load(import.meta.env.BASE_URL + "textures/particle.png");
         const material = new THREE.PointsMaterial({map:texture, color:0xffffff, size: 0.1, transparent: true, opacity: 0.04, depthWrite: false});
         this.points = new THREE.Points(geometry,material);
 

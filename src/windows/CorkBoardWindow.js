@@ -49,7 +49,7 @@ export class CorkBoardWindow extends Window {
         content.innerHTML = '';
         content.style.cssText = `
             background-color: #8B6B4C;
-            background-image: url('/textures/corcho.png');
+            background-image: url('${import.meta.env.BASE_URL}textures/corcho.png');
             background-size: cover;
             background-position: center;
             position: relative;
