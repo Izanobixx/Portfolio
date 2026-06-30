@@ -38,13 +38,6 @@
               "type": "folder",
               "children": [
                 {
-                  "id": "Documentos/Proyectos/Simulaci-n-de-Sistemas-P/.git",
-                  "label": ".git",
-                  "icon": "📁",
-                  "type": "folder",
-                  "children": []
-                },
-                {
                   "id": "Documentos/Proyectos/Simulaci-n-de-Sistemas-P/PSystems.nb",
                   "label": "PSystems.nb",
                   "icon": "📎",
@@ -348,39 +341,8 @@
       ]
     },
     {
-      "id": "NO_ENTRAR",
-      "label": "NO_ENTRAR",
-      "icon": "📁",
-      "type": "folder",
-      "children": [
-        {
-          "id": "NO_ENTRAR/NO_SIGAS",
-          "label": "NO_SIGAS",
-          "icon": "📁",
-          "type": "folder",
-          "children": [
-            {
-              "id": "NO_ENTRAR/NO_SIGAS/PARA_YA",
-              "label": "PARA_YA",
-              "icon": "📁",
-              "type": "folder",
-              "children": [
-                {
-                  "id": "NO_ENTRAR/NO_SIGAS/PARA_YA/ULTIMO_AVISO_NO_ENTRAR",
-                  "label": "ULTIMO_AVISO_NO_ENTRAR",
-                  "icon": "📁",
-                  "type": "folder",
-                  "children": []
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "Vídeos",
-      "label": "Vídeos",
+      "id": "Videos",
+      "label": "Videos",
       "icon": "📁",
       "type": "folder",
       "children": []

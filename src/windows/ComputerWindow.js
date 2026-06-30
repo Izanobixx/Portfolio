@@ -71,7 +71,7 @@ export class ComputerWindow extends Window {
 
     async loadFiles() {
         try {
-            const response = await fetch('/files.json');
+            const response = await fetch(import.meta.env.BASE_URL + 'files.json');
             if (!response.ok) throw new Error('Failed to load files.json');
             this.filesTree = await response.json();
         } catch (error) {
@@ -188,7 +188,7 @@ export class ComputerWindow extends Window {
 
             let iconHtml = '';
             if (item.type === 'image') {
-                iconHtml = `<img src="${item.url}" style="width:48px; height:48px; object-fit:cover; border-radius:4px;" alt="${item.label}">`;
+                iconHtml = `<img src="${import.meta.env.BASE_URL}${item.url}" style="width:48px; height:48px; object-fit:cover; border-radius:4px;" alt="${item.label}">`;
             } else if (item.type === 'folder' && this.folderIcons[item.label.trim().toLowerCase()]) {
                 iconHtml = `<span class="icon-emoji">${this.folderIcons[item.label.trim().toLowerCase()]}</span>`;
             } else {
@@ -335,7 +335,7 @@ export class ComputerWindow extends Window {
         if (!this.selectedFile || this.selectedFile.type === 'folder') return;
         const file = this.selectedFile;
         const a = document.createElement('a');
-        a.href = file.url;
+        a.href = import.meta.env.BASE_URL + file.url;
         a.download = file.label;
         document.body.appendChild(a);
         a.click();
@@ -726,7 +726,7 @@ export class ComputerWindow extends Window {
             if (images.length === 0) {
                 content = `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#222; color:#fff;">No hay imágenes</div>`;
             } else {
-                const currentUrl = images[currentIndex].url;
+                const currentUrl = import.meta.env.BASE_URL + images[currentIndex].url;
                 const hasNav = images.length > 1;
                 content = `
                     <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; position:relative; background:#222;">
@@ -763,7 +763,7 @@ export class ComputerWindow extends Window {
 
                 const updateImage = (newIdx) => {
                     idx = (newIdx + images.length) % images.length;
-                    img.src = images[idx].url;
+                    img.src = import.meta.env.BASE_URL + images[idx].url;
                     win.title = images[idx].label;
                     const titleBar = win.element.querySelector('.xp-title');
                     if (titleBar) titleBar.textContent = images[idx].label;
@@ -809,9 +809,9 @@ export class ComputerWindow extends Window {
             case 'pdf':
                 content = `
                     <div style="width:100%; height:100%; display:flex; flex-direction:column; background:#f0f0f0;">
-                        <embed src="${file.url}" style="flex:1; width:100%; border:none;" type="application/pdf">
+                        <embed src="${import.meta.env.BASE_URL}${file.url}" style="flex:1; width:100%; border:none;" type="application/pdf">
                         <div style="font-size:11px; text-align:center; padding:4px; background:#e8e8e8; border-top:1px solid #ccc;">
-                            <a href="${file.url}" download style="color:#0047ab; text-decoration:none;">Descargar PDF</a>
+                            <a href="${import.meta.env.BASE_URL}${file.url}" download style="color:#0047ab; text-decoration:none;">Descargar PDF</a>
                         </div>
                     </div>
                 `;
@@ -823,7 +823,7 @@ export class ComputerWindow extends Window {
                 content = `
                     <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#000;">
                         <video controls style="width:100%; height:100%; object-fit:contain;">
-                            <source src="${file.url}" type="video/mp4">
+                            <source src="${import.meta.env.BASE_URL}${file.url}" type="video/mp4">
                             Tu navegador no soporta la etiqueta de video.
                         </video>
                     </div>
@@ -834,7 +834,7 @@ export class ComputerWindow extends Window {
 
             case 'text':
                 try {
-                    const response = await fetch(file.url);
+                    const response = await fetch(import.meta.env.BASE_URL + file.url);
                     if (!response.ok) throw new Error('No se pudo cargar el archivo');
                     const text = await response.text();
                     content = `
@@ -857,7 +857,7 @@ export class ComputerWindow extends Window {
                 content = `
                     <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#f8f8f8; font-family:sans-serif; font-size:14px; color:#333;">
                         <p style="margin:0 0 12px 0;">No se puede previsualizar este archivo.</p>
-                        <a href="${file.url}" download style="color:#0047ab; text-decoration:underline;">Descargar ${file.label}</a>
+                        <a href="${import.meta.env.BASE_URL}${file.url}" download style="color:#0047ab; text-decoration:underline;">Descargar ${file.label}</a>
                     </div>
                 `;
                 width = 500;

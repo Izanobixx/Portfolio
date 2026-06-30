@@ -99,28 +99,28 @@ export class MusicBookWindow extends Window {
                 subtitle: 'Un análisis de la unión cultural en la música clásica del siglo XIX',
                 year: '2023',
                 description: 'Trabajo final de la asignatura de Historia de la Música. Explora cómo los ritmos y melodías afroamericanos influyeron en la obra de Dvorák, y cómo esta fusión refleja un momento de intercambio cultural en la música clásica del siglo XIX.',
-                file: '/pdfs/Trabajo.pdf'
+                file: import.meta.env.BASE_URL + 'pdfs/Trabajo.pdf'
             },
             {
                 title: 'El lied romántico y «Der Zwerg» de Schubert',
                 subtitle: 'Música y poesía',
                 year: '2022',
                 description: 'Análisis del lied «Der Zwerg», donde se explica cómo Schubert usa una melodía repetitiva y un bajo inquietante para reflejar la soledad y la tensión dramática del poema, logrando una profunda unión entre música y texto.',
-                file: '/pdfs/DerZwerg.pdf'
+                file: import.meta.env.BASE_URL + 'pdfs/DerZwerg.pdf'
             },
             {
                 title: 'Los tratados teóricos de Rameau',
                 subtitle: 'Resumen de la sistematización de la armonía en el siglo XVIII',
                 year: '2022',
                 description: 'Resumen de los seis tratados de Jean‑Philippe Rameau, que, sin aportar descubrimientos revolucionarios, recopilaron y ordenaron los conocimientos armónicos de su época para facilitar su estudio y difusión.',
-                file: '/pdfs/Rameau.pdf'
+                file: import.meta.env.BASE_URL + 'pdfs/Rameau.pdf'
             },
             {
                 title: 'El Lacrimosa de Mozart: del Réquiem al meme',
                 subtitle: '',
                 year: '2022',
                 description: 'Breve recorrido por el último movimiento del Réquiem de Mozart, destacando su breve letra, su estilo galante y su inesperado resurgimiento en la cultura popular gracias a los memes',
-                file: '/pdfs/Requiem.pdf'
+                file: import.meta.env.BASE_URL + 'pdfs/Requiem.pdf'
             }
         ];
 
@@ -277,7 +277,7 @@ export class MusicBookWindow extends Window {
             {
                 title: 'Portada',
                 content: `
-                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; background-image: url('/images/portada2.png'); background-size: cover; background-position: center; padding:40px; box-sizing:border-box; font-family: 'Georgia', serif; overflow:hidden; position:relative;">
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; background-image: url('${import.meta.env.BASE_URL}images/portada2.png'); background-size: cover; background-position: center; padding:40px; box-sizing:border-box; font-family: 'Georgia', serif; overflow:hidden; position:relative;">
                     </div>
                 `
             },
@@ -422,7 +422,7 @@ export class MusicBookWindow extends Window {
                         <div style="display:flex; gap:30px; flex:1; align-items:flex-start; margin-top: 35px;">
                             <!-- Imagen (izquierda) -->
                             <div style="flex:1; display:flex; flex-direction:column; align-items:center;">
-                                <img src="/images/bajo.png" alt="Mi bajo" style="width:100%; max-width:200px; border-radius:6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border:2px solid #d4c4b0;">
+                                <img src="${import.meta.env.BASE_URL}images/bajo.png" alt="Mi bajo" style="width:100%; max-width:200px; border-radius:6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border:2px solid #d4c4b0;">
                                 <p style="font-size:12px; color:#6b4c3a; margin-top:6px; font-style:italic;">Cool AF</p>
                             </div>
                             <!-- Software (derecha) -->
@@ -430,19 +430,19 @@ export class MusicBookWindow extends Window {
                                 <p style="font-size:14px; font-weight:bold; color:#2c1810; margin:0 0 4px 0;">Herramientas digitales</p>
                                 <div style="display:flex; flex-direction:column; gap:8px;">
                                     <a href="https://www.reaper.fm" target="_blank" style="display:flex; align-items:center; gap:10px; color:#2c1810; text-decoration:none; font-size:14px; border:1px solid #d4c4b0; border-radius:20px; padding:6px 16px 6px 12px; background:white; transition:all 0.15s;">
-                                        <img src="/images/logos/reaper.png" alt="Reaper" style="height:22px; width:auto;">
+                                        <img src="${import.meta.env.BASE_URL}images/logos/reaper.png" alt="Reaper" style="height:22px; width:auto;">
                                         <span>Reaper</span>
                                     </a>
                                     <a href="https://musescore.org" target="_blank" style="display:flex; align-items:center; gap:10px; color:#2c1810; text-decoration:none; font-size:14px; border:1px solid #d4c4b0; border-radius:20px; padding:6px 16px 6px 12px; background:white; transition:all 0.15s;">
-                                        <img src="/images/logos/musescore.png" alt="MuseScore" style="height:22px; width:auto;">
+                                        <img src="${import.meta.env.BASE_URL}images/logos/musescore.png" alt="MuseScore" style="height:22px; width:auto;">
                                         <span>MuseScore</span>
                                     </a>
                                     <a href="https://www.cakewalk.com" target="_blank" style="display:flex; align-items:center; gap:10px; color:#2c1810; text-decoration:none; font-size:14px; border:1px solid #d4c4b0; border-radius:20px; padding:6px 16px 6px 12px; background:white; transition:all 0.15s;">
-                                        <img src="/images/logos/cakewalk.png" alt="Cakewalk" style="height:22px; width:auto;">
+                                        <img src="${import.meta.env.BASE_URL}images/logos/cakewalk.png" alt="Cakewalk" style="height:22px; width:auto;">
                                         <span>Cakewalk by Bandlab</span>
                                     </a>
                                     <a href="https://supercollider.github.io" target="_blank" style="display:flex; align-items:center; gap:10px; color:#2c1810; text-decoration:none; font-size:14px; border:1px solid #d4c4b0; border-radius:20px; padding:6px 16px 6px 12px; background:white; transition:all 0.15s;">
-                                        <img src="/images/logos/supercollider.png" alt="Supercollider" style="height:22px; width:auto;">
+                                        <img src="${import.meta.env.BASE_URL}images/logos/supercollider.png" alt="Supercollider" style="height:22px; width:auto;">
                                         <span>Supercollider</span>
                                     </a>
                                 </div>
@@ -455,7 +455,7 @@ export class MusicBookWindow extends Window {
             {
                 title: 'Contraportada',
                 content: `
-                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; background-image: url('/images/contraPortada.PNG'); background-size: cover; background-position: center; padding:40px; box-sizing:border-box; font-family: 'Georgia', serif; overflow:hidden; position:relative;">
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; background-image: url('${import.meta.env.BASE_URL}images/contraPortada.PNG'); background-size: cover; background-position: center; padding:40px; box-sizing:border-box; font-family: 'Georgia', serif; overflow:hidden; position:relative;">
                     </div>
                 `
             }
@@ -508,7 +508,7 @@ export class MusicBookWindow extends Window {
                         En 2017, una <b>beca</b> en un concurso de piano me dio un empujón. Desde entonces he ido combinando lo que aprendí en el conservatorio con lo que he ido descubriendo por mi cuenta: <i>producción, composición,</i> y todo lo que haga falta para convertir una idea en algo que suene decente.
                     </p>
                     <div style="width: 100%; text-align: center; margin: 15px 0;">
-                        <img src="/images/micalet.jpg" alt="Con el director del Institut Musical Giner" style="width: 100%; max-width: 100%; border-radius:8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: auto;">
+                        <img src="${import.meta.env.BASE_URL}images/micalet.jpg" alt="Con el director del Institut Musical Giner" style="width: 100%; max-width: 100%; border-radius:8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: auto;">
                         <p style="font-size:12px; color:#6b4c3a; margin-top:4px;">Con el director del Giner, 2017</p>
                     </div>
                     <p style="font-size:14px; line-height:1.8; color:#3d2b1a; margin-top:10px;">
@@ -626,9 +626,9 @@ export class MusicBookWindow extends Window {
             if (index === 0) {
                 backgroundStyle = 'background: transparent;';
             } else if (index % 2 === 0) {
-                backgroundStyle = 'background-image: url("/images/RightPage.PNG"); background-size: cover; background-position: center;';
+                backgroundStyle = 'background-image: url("' + import.meta.env.BASE_URL + 'images/RightPage.PNG"); background-size: cover; background-position: center;';
             } else {
-                backgroundStyle = 'background-image: url("/images/LeftPage.PNG"); background-size: cover; background-position: center;';
+                backgroundStyle = 'background-image: url("' + import.meta.env.BASE_URL + 'images/LeftPage.PNG"); background-size: cover; background-position: center;';
             }
 
             pageDiv.style.cssText = `

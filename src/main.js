@@ -96,7 +96,7 @@ const clickableObjects = [];
 const goPositions = {};
 
 loader.load(
-    '/models/room.glb',
+    import.meta.env.BASE_URL + 'models/room.glb',
 
     function (gltf) {
         console.log("model loaded");
