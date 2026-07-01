@@ -670,7 +670,8 @@ export class GameWindow extends Window {
         const container = this.screenContent.querySelector('#screenshots-container');
         if (game.screenshots && game.screenshots.length > 0) {
             game.screenshots.forEach(url => {
-                const fullUrl = url;
+                const fullUrl = import.meta.env.BASE_URL + url;
+                console.log('fullUrl:', fullUrl); //DEBUG-------------------------------------------
                 const img = document.createElement('img');
                 img.src = fullUrl;
                 img.style.cssText = 'height:60px; border:2px solid #4a6b0a; border-radius:4px; object-fit:cover; flex-shrink:0; cursor:pointer;';
