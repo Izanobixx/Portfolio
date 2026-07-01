@@ -86,6 +86,31 @@ async function getAllImageUrls() {
         console.warn('No se pudo cargar gamesData para las imágenes:', e);
     }
 
+    //Imagenes de FE
+    try {
+        const filesRes = await fetch(import.meta.env.BASE_URL + 'files.json');
+        console.log("LOADING IMAGES!!!!!!!!!!!!!!!!!!");
+        if (filesRes.ok) {
+            const filesTree = await filesRes.json();
+            // Función recursiva para extraer imágenes
+            const collectImageUrls = (node) => {
+                if (node.type === 'image' && node.url) {
+                    console.log("IMAGE URL: " + node.url);
+                    // node.url empieza con '/computer/...' (relativo a public/)
+                    urls.add(node.url);
+                }
+                if (node.children) {
+                    node.children.forEach(child => collectImageUrls(child));
+                }
+            };
+            collectImageUrls(filesTree);
+        } else {
+            console.warn('No se pudo cargar files.json');
+        }
+    } catch (e) {
+        console.warn('Error al cargar files.json:', e);
+    }
+
     // Aplicar BASE_URL a todas las rutas
     return [...urls].map(url => import.meta.env.BASE_URL + url);
 }
@@ -117,7 +142,7 @@ manager.onProgress = (url, loaded, total) => {
     console.log(`${loaded}/${total} – ${url}`);
 };
 manager.onError = (url) => {
-    console.error(`❌ Error cargando: ${url}`);
+    console.error(`Error cargando: ${url}`);
 };
 
 // --------------------
@@ -217,7 +242,6 @@ loader.load(
 // --------------------
 function checkAllLoaded() {
     if (modelLoaded && texturesLoaded && imagesLowResReady) {
-        // Cargar versión full-res en segundo plano
         loadFullResImages(imageUrls);
         finishLoading();
     }
