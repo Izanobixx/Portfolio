@@ -27,7 +27,7 @@ export class PostItCreatorWindow extends Window {
         this.canvasWidth = 300;
         this.canvasHeight = 300;
 
-        this.windowBackground = 'url(/textures/wood.png)';
+        this.windowBackground = 'url(' + import.meta.env.BASE_URL + 'textures/wood.png)';
 
         this.element.style.left = this.x + 'px';
         this.element.style.top = this.y + 'px';

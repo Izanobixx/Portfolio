@@ -1,3 +1,5 @@
+import { registerImagesInContainer } from "../utils/ImageLoader.js";
+
 export class Window {
 
     constructor(manager, options) {
@@ -52,6 +54,9 @@ export class Window {
         const contentEl = this.element.querySelector(".xp-content");
         if (this.content)
             contentEl.innerHTML = this.content;
+
+        // Registrar imágenes dentro del contenido (si las hay)
+        registerImagesInContainer(contentEl);
 
         const el = this.element;
 

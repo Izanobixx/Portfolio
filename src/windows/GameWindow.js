@@ -7,17 +7,14 @@ let globalAudioCtx = null;
 
 function playClickSound() {
     try {
-        // Crear el contexto si no existe
         if (!globalAudioCtx) {
             globalAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
-        // Reanudar si está suspendido (política de autoplay)
         if (globalAudioCtx.state === 'suspended') {
             globalAudioCtx.resume();
         }
         const audioCtx = globalAudioCtx;
 
-        // Componente medio-grave (cuerpo del click)
         const osc2 = audioCtx.createOscillator();
         const gain2 = audioCtx.createGain();
         osc2.type = 'sine';
@@ -29,7 +26,6 @@ function playClickSound() {
         osc2.start(audioCtx.currentTime);
         osc2.stop(audioCtx.currentTime + 0.05);
 
-        // Textura de ruido (roce del plástico)
         const bufferSize = audioCtx.sampleRate * 0.03;
         const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
@@ -46,9 +42,7 @@ function playClickSound() {
         noiseSource.start(audioCtx.currentTime);
         noiseSource.stop(audioCtx.currentTime + 0.03);
 
-    } catch (e) {
-        // Silenciar errores (por si el navegador bloquea el audio)
-    }
+    } catch (e) {}
 }
 
 export class GameWindow extends Window {
@@ -113,7 +107,6 @@ export class GameWindow extends Window {
         this.element.__gameWindowInstance = this;
     }
 
-    // ---------- Datos ----------
     getGames() {
         return gamesData;
     }
@@ -131,7 +124,6 @@ export class GameWindow extends Window {
         return gamesData.filter(g => g.categories.includes(categoryId));
     }
 
-    // ---------- Renderizado ----------
     renderGameWindow() {
         const content = this.element.querySelector('.xp-content');
         content.style.cssText = `
@@ -148,7 +140,6 @@ export class GameWindow extends Window {
             box-shadow: inset 0 0 0 2px #c0b09a, 0 4px 12px rgba(0,0,0,0.3);
         `;
 
-        // Logo
         const logo = document.createElement('div');
         logo.textContent = 'Game Child';
         logo.style.cssText = `
@@ -164,7 +155,6 @@ export class GameWindow extends Window {
         `;
         content.appendChild(logo);
 
-        // Envoltorio pantalla
         const screenWrapper = document.createElement('div');
         screenWrapper.style.cssText = `
             flex: 0 0 auto;
@@ -177,7 +167,6 @@ export class GameWindow extends Window {
         `;
         content.appendChild(screenWrapper);
 
-        // Contenedor TV
         const tvContainer = document.createElement('div');
         tvContainer.style.cssText = `
             width: 80%;
@@ -193,7 +182,6 @@ export class GameWindow extends Window {
         `;
         screenWrapper.appendChild(tvContainer);
 
-        // Scanlines
         const scanlines = document.createElement('div');
         scanlines.style.cssText = `
             position: absolute;
@@ -207,7 +195,6 @@ export class GameWindow extends Window {
         `;
         tvContainer.appendChild(scanlines);
 
-        // Fondo de pantalla
         const screenBg = document.createElement('div');
         screenBg.style.cssText = `
             position: absolute;
@@ -226,7 +213,6 @@ export class GameWindow extends Window {
         `;
         tvContainer.appendChild(screenBg);
 
-        // Contenido de la pantalla (scroll oculto)
         this.screenContent = document.createElement('div');
         this.screenContent.className = 'gamewindow-scroll-content';
         this.screenContent.style.cssText = `
@@ -239,7 +225,6 @@ export class GameWindow extends Window {
         `;
         screenBg.appendChild(this.screenContent);
 
-        // Mensaje inicial
         this.screenContent.innerHTML = `
             <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:16px; opacity:0.6; text-align:center; color:#1a3a0a;">
                 <div>
@@ -249,7 +234,6 @@ export class GameWindow extends Window {
             </div>
         `;
 
-        // Flechas de scroll para la pantalla de información
         const arrowUpInfo = document.createElement('div');
         arrowUpInfo.className = 'scroll-arrow-up-info';
         arrowUpInfo.textContent = '▲';
@@ -307,7 +291,6 @@ export class GameWindow extends Window {
         this.arrowUpInfo = arrowUpInfo;
         this.arrowDownInfo = arrowDownInfo;
 
-        // Eventos para flechas de información
         arrowUpInfo.addEventListener('click', () => {
             this.screenContent.scrollBy({ top: -80, behavior: 'smooth' });
         });
@@ -317,7 +300,6 @@ export class GameWindow extends Window {
 
         this.screenContent.addEventListener('scroll', () => this.updateInfoScrollIndicators());
 
-        // ---- Estante de cartuchos ----
         const shelfWrapper = document.createElement('div');
         shelfWrapper.style.cssText = `
             flex: 1;
@@ -346,7 +328,6 @@ export class GameWindow extends Window {
         `;
         shelfWrapper.appendChild(shelfContainer);
 
-        // Barra de categorías
         const categoryBar = document.createElement('div');
         categoryBar.style.cssText = `
             display: flex;
@@ -365,7 +346,6 @@ export class GameWindow extends Window {
         `;
         shelfContainer.appendChild(categoryBar);
 
-        // Contenedor del grid con scroll oculto y flechas
         const gridWrapper = document.createElement('div');
         gridWrapper.style.cssText = `
             position: relative;
@@ -375,7 +355,6 @@ export class GameWindow extends Window {
         `;
         shelfContainer.appendChild(gridWrapper);
 
-        // Grid de cartuchos
         this.cartridgeGrid = document.createElement('div');
         this.cartridgeGrid.className = 'cartridge-grid';
         this.cartridgeGrid.style.cssText = `
@@ -390,7 +369,6 @@ export class GameWindow extends Window {
         `;
         gridWrapper.appendChild(this.cartridgeGrid);
 
-        // Flechas para el grid de cartuchos
         const arrowUpCart = document.createElement('div');
         arrowUpCart.className = 'scroll-arrow-up-cart';
         arrowUpCart.textContent = '▲';
@@ -448,7 +426,6 @@ export class GameWindow extends Window {
         this.arrowUpCart = arrowUpCart;
         this.arrowDownCart = arrowDownCart;
 
-        // Eventos para flechas del grid
         arrowUpCart.addEventListener('click', () => {
             this.cartridgeGrid.scrollBy({ top: -80, behavior: 'smooth' });
         });
@@ -458,7 +435,6 @@ export class GameWindow extends Window {
 
         this.cartridgeGrid.addEventListener('scroll', () => this.updateCartridgeScrollIndicators());
 
-        // ---- Decoración inferior (botones) ----
         const decorContainer = document.createElement('div');
         decorContainer.style.cssText = `
             width: 80%;
@@ -479,7 +455,6 @@ export class GameWindow extends Window {
         `;
         shelfWrapper.appendChild(decorContainer);
 
-        // Botón Power
         const powerBtn = document.createElement('button');
         powerBtn.textContent = '⏻';
         powerBtn.style.cssText = `
@@ -534,7 +509,6 @@ export class GameWindow extends Window {
         });
         decorContainer.appendChild(powerBtn);
 
-        // Botón Install
         const installBtn = document.createElement('button');
         installBtn.textContent = 'Install';
         installBtn.style.cssText = `
@@ -572,7 +546,6 @@ export class GameWindow extends Window {
         });
         decorContainer.appendChild(installBtn);
 
-        // USB
         const usbContainer = document.createElement('div');
         usbContainer.style.cssText = `
             display: flex;
@@ -608,7 +581,6 @@ export class GameWindow extends Window {
         usbContainer.appendChild(usbLabel);
         decorContainer.appendChild(usbContainer);
 
-        // Guardar referencias
         this.tvContainer = tvContainer;
         this.shelfContainer = shelfContainer;
         this.categoryBar = categoryBar;
@@ -617,15 +589,12 @@ export class GameWindow extends Window {
         this.decorContainer = decorContainer;
         this.screenBg = screenBg;
 
-        // Inicializar indicadores
         this.updateInfoScrollIndicators();
         this.updateCartridgeScrollIndicators();
     }
 
-    // ---------- Mostrar mensaje de instalación ----------
     showInstallMessage() {
         if (this.isFullscreen) this.closeFullscreen();
-
         this.isInstallMode = true;
         if (this.isScreenOff) {
             this.screenContent.style.display = 'none';
@@ -644,13 +613,9 @@ export class GameWindow extends Window {
         this.updateInfoScrollIndicators();
     }
 
-    // ---------- Actualizar pantalla con información del juego ----------
     updateScreen(game) {
         if (this.isFullscreen) this.closeFullscreen();
-
-        if (this.isInstallMode) {
-            this.isInstallMode = false;
-        }
+        if (this.isInstallMode) this.isInstallMode = false;
         if (this.isScreenOff) {
             this.screenContent.style.display = 'none';
             return;
@@ -670,7 +635,7 @@ export class GameWindow extends Window {
             return;
         }
 
-        let html = `
+        const html = `
             <div style="display:flex; flex-direction:column; gap:4px; height:100%;">
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #4a6b0a; padding-bottom:4px;">
                     <div style="display:flex; flex-direction:column; gap:2px;">
@@ -691,13 +656,8 @@ export class GameWindow extends Window {
                 <div style="flex:1; overflow-y:auto; font-size:12px; line-height:1.4; margin-top:4px; padding-right:4px; color:#1a3a0a;">
                     ${game.description || ''}
                 </div>
-                ${game.screenshots && game.screenshots.length > 0 ? `
-                    <div style="display:flex; gap:6px; overflow-x:auto; padding:4px 0; flex-shrink:0;">
-                        ${game.screenshots.map(url => `
-                            <img src="${url}" style="height:60px; border:2px solid #4a6b0a; border-radius:4px; object-fit:cover; flex-shrink:0; cursor:pointer;" data-url="${url}" />
-                        `).join('')}
-                    </div>
-                ` : ''}
+                <div id="screenshots-container" style="display:flex; gap:6px; overflow-x:auto; padding:4px 0; flex-shrink:0;">
+                </div>
                 <div style="display:flex; gap:8px; margin-top:4px; flex-wrap:wrap; border-top:1px solid #4a6b0a; padding-top:6px;">
                     ${game.itchUrl ? `<a href="${game.itchUrl}" target="_blank" style="color:#1a3a0a; text-decoration:none; border:1px solid #4a6b0a; padding:2px 10px; border-radius:16px; font-size:11px; background:rgba(0,0,0,0.05);">▶ Jugar</a>` : ''}
                     ${game.playStoreUrl ? `<a href="${game.playStoreUrl}" target="_blank" style="color:#1a3a0a; text-decoration:none; border:1px solid #4a6b0a; padding:2px 10px; border-radius:16px; font-size:11px; background:rgba(0,0,0,0.05);">▶ Play Store</a>` : ''}
@@ -706,35 +666,43 @@ export class GameWindow extends Window {
             </div>
         `;
         this.screenContent.innerHTML = html;
-        this.attachImageClickListeners();
+
+        const container = this.screenContent.querySelector('#screenshots-container');
+        if (game.screenshots && game.screenshots.length > 0) {
+            game.screenshots.forEach(url => {
+                const fullUrl = url;
+                const img = document.createElement('img');
+                img.src = fullUrl;
+                img.style.cssText = 'height:60px; border:2px solid #4a6b0a; border-radius:4px; object-fit:cover; flex-shrink:0; cursor:pointer;';
+                img.dataset.url = fullUrl;
+                img.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (!this.isScreenOff && !this.isFullscreen) {
+                        this.openFullscreenImage(fullUrl);
+                    }
+                });
+                container.appendChild(img);
+            });
+        } else {
+            container.style.display = 'none';
+        }
         this.updateInfoScrollIndicators();
     }
 
-    // ---------- Asignar eventos de clic a las imágenes ----------
-    attachImageClickListeners() {
-        this.screenContent.querySelectorAll('img[data-url]').forEach(img => {
-            img.removeEventListener('click', this._imageClickHandler);
-            this._imageClickHandler = (e) => {
-                e.stopPropagation();
-                if (!this.isScreenOff && !this.isFullscreen) {
-                    this.openFullscreenImage(img.dataset.url);
-                }
-            };
-            img.addEventListener('click', this._imageClickHandler);
-        });
-    }
-
-    // ---------- Fullscreen de imagen ----------
     openFullscreenImage(url) {
         if (this.isScreenOff || this.isFullscreen) return;
         this._savedContentHTML = this.screenContent.innerHTML;
         this.isFullscreen = true;
 
-        this.screenContent.innerHTML = `
-            <div style="display:flex; align-items:center; justify-content:center; width:100%; height:100%; cursor:pointer; background:#9bbc0f; border-radius:12px;">
-                <img src="${url}" style="max-width:100%; max-height:100%; object-fit:contain; border:none; box-shadow:0 0 20px rgba(0,0,0,0.3); border-radius:10px;" />
-            </div>
-        `;
+        const container = document.createElement('div');
+        container.style.cssText = 'display:flex; align-items:center; justify-content:center; width:100%; height:100%; cursor:pointer; background:#9bbc0f; border-radius:12px;';
+        const img = document.createElement('img');
+        img.src = url;
+        img.style.cssText = 'max-width:100%; max-height:100%; object-fit:contain; border:none; box-shadow:0 0 20px rgba(0,0,0,0.3); border-radius:10px;';
+        container.appendChild(img);
+
+        this.screenContent.innerHTML = '';
+        this.screenContent.appendChild(container);
 
         this._fullscreenCloseHandler = (e) => {
             if (e.target === this.screenContent || e.target.tagName === 'IMG') {
@@ -750,7 +718,7 @@ export class GameWindow extends Window {
         if (this._savedContentHTML) {
             this.screenContent.innerHTML = this._savedContentHTML;
             this._savedContentHTML = null;
-            this.attachImageClickListeners();
+            this.rebuildScreenshots();
         }
         if (this._fullscreenCloseHandler) {
             this.screenContent.removeEventListener('click', this._fullscreenCloseHandler);
@@ -760,7 +728,28 @@ export class GameWindow extends Window {
         this.updateInfoScrollIndicators();
     }
 
-    // ---------- Renderizar cartuchos ----------
+    rebuildScreenshots() {
+        const container = this.screenContent.querySelector('#screenshots-container');
+        if (!container) return;
+        const game = this.getGame(this.currentGameId);
+        if (!game || !game.screenshots) return;
+        container.innerHTML = '';
+        game.screenshots.forEach(url => {
+            const fullUrl = import.meta.env.BASE_URL + url;
+            const img = document.createElement('img');
+            img.src = fullUrl;
+            img.style.cssText = 'height:60px; border:2px solid #4a6b0a; border-radius:4px; object-fit:cover; flex-shrink:0; cursor:pointer;';
+            img.dataset.url = fullUrl;
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!this.isScreenOff && !this.isFullscreen) {
+                    this.openFullscreenImage(fullUrl);
+                }
+            });
+            container.appendChild(img);
+        });
+    }
+
     renderCartridges(categoryId = 'all') {
         const games = this.getGamesByCategory(categoryId);
         this.filteredGames = games;
@@ -825,13 +814,9 @@ export class GameWindow extends Window {
         this.updateCartridgeScrollIndicators();
     }
 
-    // ---------- Seleccionar juego ----------
     selectGame(gameId) {
         if (this.isFullscreen) this.closeFullscreen();
-
-        if (this.isInstallMode) {
-            this.isInstallMode = false;
-        }
+        if (this.isInstallMode) this.isInstallMode = false;
         if (!gameId) {
             this.currentGameId = null;
             this.updateScreen(null);
@@ -853,7 +838,6 @@ export class GameWindow extends Window {
         }
     }
 
-    // ---------- Eventos de categorías ----------
     bindEvents() {
         this.categoryBar.addEventListener('click', (e) => {
             const btn = e.target.closest('.cat-btn');
@@ -880,7 +864,6 @@ export class GameWindow extends Window {
         if (allBtn) allBtn.click();
     }
 
-    // ---------- Conexión USB ----------
     onCableConnected() {
         this.showConnectionSuccess();
     }
@@ -936,7 +919,6 @@ export class GameWindow extends Window {
         return result;
     }
 
-    // ---------- Indicadores de scroll para la pantalla de información ----------
     updateInfoScrollIndicators() {
         if (!this.screenContent) return;
         const { scrollTop, scrollHeight, clientHeight } = this.screenContent;
@@ -949,7 +931,6 @@ export class GameWindow extends Window {
         this.arrowDownInfo.style.pointerEvents = canScrollDown ? 'auto' : 'none';
     }
 
-    // ---------- Indicadores de scroll para el grid de cartuchos ----------
     updateCartridgeScrollIndicators() {
         if (!this.cartridgeGrid) return;
         const { scrollTop, scrollHeight, clientHeight } = this.cartridgeGrid;
@@ -962,7 +943,6 @@ export class GameWindow extends Window {
         this.arrowDownCart.style.pointerEvents = canScrollDown ? 'auto' : 'none';
     }
 
-    // ---------- Cerrar ventana ----------
     close() {
         if (this.isFullscreen) this.closeFullscreen();
         const event = new CustomEvent('gameWindowClosed', {

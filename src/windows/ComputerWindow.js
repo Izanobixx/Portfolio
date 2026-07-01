@@ -1,5 +1,6 @@
 import { Window } from "./Window";
 import { CableManager } from "../CableManager.js";
+import { registerImageElement, registerImagesInContainer } from "../utils/ImageLoader.js";
 
 export class ComputerWindow extends Window {
     constructor(manager, options = {}) {
@@ -186,19 +187,34 @@ export class ComputerWindow extends Window {
             div.dataset.id = item.id;
             div.dataset.type = item.type;
 
-            let iconHtml = '';
+            const iconContainer = document.createElement('div');
+            iconContainer.className = 'icon';
+
             if (item.type === 'image') {
-                iconHtml = `<img src="${import.meta.env.BASE_URL}${item.url}" style="width:48px; height:48px; object-fit:cover; border-radius:4px;" alt="${item.label}">`;
+                const img = document.createElement('img');
+                img.style.cssText = 'width:48px; height:48px; object-fit:cover; border-radius:4px;';
+                img.alt = item.label;
+                const fullUrl = import.meta.env.BASE_URL + item.url;
+                registerImageElement(fullUrl, img);
+                iconContainer.appendChild(img);
             } else if (item.type === 'folder' && this.folderIcons[item.label.trim().toLowerCase()]) {
-                iconHtml = `<span class="icon-emoji">${this.folderIcons[item.label.trim().toLowerCase()]}</span>`;
+                const span = document.createElement('span');
+                span.className = 'icon-emoji';
+                span.textContent = this.folderIcons[item.label.trim().toLowerCase()];
+                iconContainer.appendChild(span);
             } else {
-                iconHtml = `<span class="icon-emoji">${item.icon}</span>`;
+                const span = document.createElement('span');
+                span.className = 'icon-emoji';
+                span.textContent = item.icon;
+                iconContainer.appendChild(span);
             }
 
-            div.innerHTML = `
-                <div class="icon">${iconHtml}</div>
-                <div class="label">${item.label}</div>
-            `;
+            const label = document.createElement('div');
+            label.className = 'label';
+            label.textContent = item.label;
+
+            div.appendChild(iconContainer);
+            div.appendChild(label);
 
             div.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -728,15 +744,38 @@ export class ComputerWindow extends Window {
             } else {
                 const currentUrl = import.meta.env.BASE_URL + images[currentIndex].url;
                 const hasNav = images.length > 1;
-                content = `
-                    <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; position:relative; background:#222;">
-                        <img id="image-viewer" src="${currentUrl}" style="max-width:100%; max-height:100%; object-fit:contain; user-select:none;">
-                        ${hasNav ? `
-                            <button id="prev-image" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:10px 15px; cursor:pointer; font-size:24px; border-radius:4px; opacity:0.7; transition:opacity 0.2s; user-select:none;">◀</button>
-                            <button id="next-image" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:10px 15px; cursor:pointer; font-size:24px; border-radius:4px; opacity:0.7; transition:opacity 0.2s; user-select:none;">▶</button>
-                        ` : ''}
-                    </div>
-                `;
+                const container = document.createElement('div');
+                container.style.cssText = 'width:100%; height:100%; display:flex; align-items:center; justify-content:center; position:relative; background:#222;';
+
+                const img = document.createElement('img');
+                img.id = 'image-viewer';
+                img.style.cssText = 'max-width:100%; max-height:100%; object-fit:contain; user-select:none;';
+                registerImageElement(currentUrl, img);
+                container.appendChild(img);
+
+                if (hasNav) {
+                    const prevBtn = document.createElement('button');
+                    prevBtn.id = 'prev-image';
+                    prevBtn.style.cssText = 'position:absolute; left:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:10px 15px; cursor:pointer; font-size:24px; border-radius:4px; opacity:0.7; transition:opacity 0.2s; user-select:none;';
+                    prevBtn.textContent = '◀';
+                    container.appendChild(prevBtn);
+
+                    const nextBtn = document.createElement('button');
+                    nextBtn.id = 'next-image';
+                    nextBtn.style.cssText = 'position:absolute; right:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; padding:10px 15px; cursor:pointer; font-size:24px; border-radius:4px; opacity:0.7; transition:opacity 0.2s; user-select:none;';
+                    nextBtn.textContent = '▶';
+                    container.appendChild(nextBtn);
+
+                    // Guardar referencias para luego usar
+                    container.dataset.images = JSON.stringify(images.map(i => i.url));
+                    container.dataset.currentIndex = currentIndex;
+                }
+
+                // Convertir container a string HTML para el contenido de la ventana
+                const tempDiv = document.createElement('div');
+                tempDiv.appendChild(container);
+                content = tempDiv.innerHTML;
+
                 width = 700;
                 height = 550;
             }
@@ -754,8 +793,10 @@ export class ComputerWindow extends Window {
                 currentImageIndex: currentIndex
             });
 
-            if (window.dialogueManager && images.length > 1) {
+            // Registrar imágenes dentro de la ventana (por si hay alguna)
+            registerImagesInContainer(win.element);
 
+            if (window.dialogueManager && images.length > 1) {
                 const img = win.element.querySelector('#image-viewer');
                 const prevBtn = win.element.querySelector('#prev-image');
                 const nextBtn = win.element.querySelector('#next-image');
@@ -763,11 +804,11 @@ export class ComputerWindow extends Window {
 
                 const updateImage = (newIdx) => {
                     idx = (newIdx + images.length) % images.length;
-                    img.src = import.meta.env.BASE_URL + images[idx].url;
+                    const url = import.meta.env.BASE_URL + images[idx].url;
+                    registerImageElement(url, img);
                     win.title = images[idx].label;
                     const titleBar = win.element.querySelector('.xp-title');
                     if (titleBar) titleBar.textContent = images[idx].label;
-
                     this.ReactToFile(images[idx].label);
                 };
 

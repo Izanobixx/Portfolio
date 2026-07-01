@@ -3,6 +3,7 @@ import { EmbedWindow } from './EmbedWindow.js';
 import 'turn.js';
 import $ from 'jquery';
 import { questions } from "../questions.js";
+import { registerImagesInContainer } from "../utils/ImageLoader.js";
 
 window.$ = $;
 
@@ -640,6 +641,8 @@ export class MusicBookWindow extends Window {
             `;
             
             pageDiv.innerHTML = page.content;
+            // Registrar imágenes dentro de esta página
+            registerImagesInContainer(pageDiv);
             bookContainer.appendChild(pageDiv);
         });
 
