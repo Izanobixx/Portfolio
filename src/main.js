@@ -103,7 +103,7 @@ const imageUrls = await getAllImageUrls();
 // 2. Precargar versión low-res de todas las imágenes
 await preloadImagesLowRes(imageUrls);
 imagesLowResReady = true;
-console.log('✅ Low-res images ready');
+console.log('Low-res images ready');
 
 // --------------------
 // LOADING MANAGER (PARA THREE.JS)
@@ -114,7 +114,7 @@ manager.onLoad = () => {
     checkAllLoaded();
 };
 manager.onProgress = (url, loaded, total) => {
-    console.log(`📦 ${loaded}/${total} – ${url}`);
+    console.log(`${loaded}/${total} – ${url}`);
 };
 manager.onError = (url) => {
     console.error(`❌ Error cargando: ${url}`);
