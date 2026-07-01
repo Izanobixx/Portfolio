@@ -1,0 +1,255 @@
+Vamos a hacer una función que dado un sistema P y un numero natural i, ejecute dicho sistema P hasta que pare o hasta realizar n iteraciones de modo máximamente paralelo.
+Sistema P: 
+        {	ESTADO INICIAL:{nº_membrana, símbolo_1, símbolo_..., {nº_membrana, símbolo_1, símbolo_..., {nº_membrana_..., símbolo_1, ...}, {nº_membrana_..., símbolo_1, símbolo_...}}}, 
+	REGLAS:                  {{nº_membrana, {regla_1, regla_...},{prioridad_1,prioridad_...}}, {nº_membrana, {regla_1, regla_...},{prioridad_1,prioridad_...}}, ...},
+	OUTPUT:                nº_membrana_final}
+	dónde:
+	
+	símbolos: los símbolos serán caracteres en {a,b,...,y,z} en minúscula.
+	
+	nº_membrana: debe ser un número entero >0. En el estado inicial, una membrana puede no tener símbolos. Y si una membrana no tiene reglas, se representará como: {nº_membrana,{},{}}
+	
+	regla_n: {{símbolo_antecedente_1, símbolo_antecedente_...}, {símbolo_consecuente_1, where_1, símbolo_consecuente_..., where_...}}
+	Se asumirá que los símbolos antecedentes y consecuentes son partes del alfabeto, exceptuando 𝛿 que solo podrá aparecer como consecuente e indicará que la membrana en la que se encuentra se disolverá (ignorando su correspondiente where_n).
+	También se asumirá que la lista de prioridades tiene el mismo tamaño que la lista de reglas para una membrana, y que la prioridad con índice i corresponde a la regla con índice i y que cuanto mayor sea el número, mayor prioridad tendrá, pudiendo 2 o más reglas tener la misma prioridad. 
+	
+	where_m: es un número entero que indica a qué membrana se le asignará el símbolo_consecuente_m. Si se pone un número > 0, el\.08 símbolo se insertará en dicha membrana (se asumirá que dicha membrana existe). IMPORTANTE NOTAR: Por el bien de la simplicidad, no se comprobará que la membrana a la que se dirige un símbolo consecuente (where_m) sea adyacente, en otras palabras, las reglas pueden insertar símbolos desde cualquier membrana a cualquier otra membrana, sin restricciones.
+
+(* --- MAIN --- *)
+Simulate[P_, iters_] := 
+  Module[{system, newSystem, allRules, outputMembraneNumber, i, 
+    output, outputMembrane},
+   system = P[[1]];
+   allRules = P[[2]];
+   outputMembraneNumber = P[[3]];
+   For[i = 1, i <= iters, i++,
+    Print["ITERATION ", i, ". System state: ", system];
+    newSystem = 
+     ExecutionCycle[system, system, system, allRules][[2]];
+    If[system == newSystem, Break[]];
+    system = newSystem;
+    ];
+   Print["Exited after ", i, " iterations: ", newSystem];
+   output = {};
+   outputMembrane = GetMembrane[outputMembraneNumber, newSystem];
+   For[i = 2, i <= Length[outputMembrane], i++,
+    If[Length[outputMembrane[[i]]] == 0, 
+      AppendTo[output, outputMembrane[[i]]];];
+    ];
+   Print["OUTPUT: ", output];
+   ];
+
+(* --- FUNCIONES ESPECIFICAS --- *)
+AddSymbolToMembrane[symbol_, membrane_, system_] := Module[{newSys, i},
+   newSys = system;
+   (*IF current membrane IS target membrane -> 
+   INSERT symbol and RETURN*)
+   If[system[[1]] == membrane, Return[Insert[system, symbol, 2]];];
+   For[i = 2, i <= Length[system], i++,
+    (*IF submembrane is FOUND -> 
+    REPLACE submembrane with recursion call*)
+    If[Length[system[[i]]] > 0, 
+      newSys[[i]] = 
+        AddSymbolToMembrane[symbol, membrane, system[[i]]];];
+    ];
+   (*IF all submembranes have been checked -> RETURN*)
+   Return[newSys];
+   ];
+
+RemoveSymbolFromMembrane[symbol_, membrane_, system_] := 
+  Module[{newSys, i},
+   newSys = system;
+   (*IF current membrane IS target membrane -> 
+   INSERT symbol and RETURN*)
+   If[system[[1]] == membrane, 
+    Return[Delete[system, FirstPosition[system, symbol]]];];
+   For[i = 2, i <= Length[system], i++,
+    (*IF submembrane is FOUND -> 
+    REPLACE submembrane with recursion call*)
+    If[Length[system[[i]]] > 0, 
+      newSys[[i]] = 
+        RemoveSymbolFromMembrane[symbol, membrane, system[[i]]];];
+    ];
+   (*IF all submembranes have been checked -> RETURN*)
+   Return[newSys];
+   ];
+
+DissolveMembrane[membrane_, system_] := 
+  Module[{s, newSys, i, j, lower},
+   newSys = {};
+   (*IF current membrane IS target membrane -> 
+   CHANGE membrane_ID to -1 and RETURN*)
+   If[system[[1]] == membrane, newSys = system; newSys[[1]] = -1; 
+    Return[newSys];];
+   (*FOR every element in the current membrane*)
+   For[i = 1, i <= Length[system], i++,
+    (*IF current element is the membrane_ID OR a symbol, append it*)
+    If[Length[system[[i]]] == 0, AppendTo[newSys, system[[i]]];,
+      (*ELSE*)
+      lower = DissolveMembrane[membrane, system[[i]]];
+      If[lower[[1]] == -1,
+       For[j = 2, j <= Length[lower], j++, 
+         AppendTo[newSys, lower[[j]]];];,
+       (*ELSE*)
+       AppendTo[newSys, lower];
+       ];
+      ];
+    ];
+   (*Once everything has been appended, RETURN the set of newSys*)
+   Return[newSys];
+   ];
+
+GetMembrane[membrane_, system_] := Module[{i, foundMembrane},
+   If[system[[1]] == membrane, Return[system];];
+   foundMembrane = {};
+   For[i = 2, i <= Length[system], i++,
+    (*IF submembrane is FOUND -> recursion call*)
+    If[Length[system[[i]]] > 0,
+      foundMembrane = GetMembrane[membrane, system[[i]]];
+      (*IF the membrane has been found in the submembrane, RETURN it*)
+      If[Length[foundMembrane] > 0, Return[foundMembrane]];
+      ];
+    ];
+   (*IF all submembranes have been checked -> RETURN EMPTY MEMBRANE*)
+   Return[{}];
+   ];
+
+ContainsAllSymbols[symbols_, required_] := Module[{list, i},
+   list = symbols;
+   For[i = 1, i <= Length[required], i++,
+    If[ContainsAny[list, {required[[i]]}], 
+      list = Delete[list, FirstPosition[list, required[[i]]]];, 
+      Return[False];];
+    ];
+   Return[True];
+   ];
+
+ExecutionCycle[sys_, newSys_, memb_, allRules_] := 
+  Module[{membraneNumber, system, newSystem, membrane, i, output, 
+    rules, priorities},
+   (*INITIALIZE variables*)
+   system = sys; newSystem = newSys; membrane = memb;
+   membraneNumber = membrane[[1]];
+   (*FOR every element in this membrane*)
+   For[i = 2, i <= Length [membrane], i++,
+    (*IF the element is another membrane -> RECURSION CALL*)
+    If[Length[membrane[[i]]] > 0,
+      output = 
+       ExecutionCycle[system, newSystem, membrane[[i]], allRules];
+      system = output[[1]];
+      newSystem = output[[2]];
+      ];
+    ];
+   (*Once FOR loop is exited, 
+   there are NO submembranes left to be executed, 
+   then execute this membrane*)
+   (*FOR every set of rules*)
+   rules = {};
+   priorities = {};
+   For[i = 1, i <= Length[allRules], i++,
+    (*ASSIGN corresponding rules and priorities if they exist*)
+    If[allRules[[i]][[1]] == membraneNumber, 
+      rules = allRules[[i]][[2]]; priorities = allRules[[i]][[3]];];
+    ];
+   Return[
+    MembraneSimulation[membraneNumber, rules, priorities, system, 
+     newSystem]];
+   ];
+
+MembraneSimulation[membrane_, rul_, prio_, sys_, newSys_] := 
+  Module[{system, newSystem, rules, priorities, 
+    largestPriorityRulesIndex, currentIndex, currentRule, 
+    currentMembrane, required, produced, where, appliedRule, 
+    symbolsInMembrane, i, dissolve},
+   system = sys; newSystem = newSys;
+   rules = rul; priorities = prio;
+   appliedRule = False;
+   currentIndex = -1;
+   dissolve = False;
+   (*WHILE no rule has been applied and more rules to be applied*)
+   While[! appliedRule,
+    (*IF no more rules to check -> EXIT while loop*)
+    If[Length[priorities] == 0, Break[];];
+    (*STORE a list of the highest BUT SAME priority indicies of rules*)
+    largestPriorityRulesIndex = 
+     Flatten[Position[priorities, Max[priorities]]];
+    (*WHILE there are applicable rules with max priority*)
+    While[Length[largestPriorityRulesIndex] > 0,
+     currentIndex = RandomChoice[largestPriorityRulesIndex];
+     currentRule = rules[[currentIndex]];
+     
+     (*GET required symbols for the rule*)
+     required = currentRule[[1]];
+     (*GET produced symbols for the rule*)
+     produced = currentRule[[2]][[1 ;; ;; 2]]; (*all ODD elements*)
+     (*GET membranes where produced symbols have to be stored*)
+     where = currentRule[[2]][[2 ;; ;; 2]]; (*all EVEN elements*)
+     
+     (*GET current membrane*)
+     currentMembrane = GetMembrane[membrane, system];
+     (*GET symbols in current membrane*)
+     symbolsInMembrane = {};
+     For[i = 2, i <= Length[currentMembrane], i++, 
+      If[Length[currentMembrane[[i]]] == 0, 
+        AppendTo[symbolsInMembrane, currentMembrane[[i]]];];];
+     (*IF required symbols ar in membrane symbols -> APPLY RULE*)
+     If[ContainsAllSymbols[symbolsInMembrane, required],
+      appliedRule = True;
+      Print["    RULE APPLIED IN MEMBRANE ", membrane, ": ", 
+       required, " -> ", produced, " to membranes " , where];
+      (*REMOVE ALL REQUIRED SYMBOLS*)
+      For[i = 1, i <= Length[required], i++,
+       system = 
+        RemoveSymbolFromMembrane[required[[i]], membrane, system];
+       newSystem = 
+        RemoveSymbolFromMembrane[required[[i]], membrane, newSystem];
+       ];
+      (*ADD ALL PRODUCT SYMBOLS*)
+      For[i = 1, i <= Length[produced], i++,
+       (*IF produced 𝛿 -> mark dissolve flag*)
+       If[produced[[i]] === 𝛿, dissolve = True,
+         (*ELSE*)
+         
+         newSystem = 
+           AddSymbolToMembrane[produced[[i]], where[[i]], newSystem];
+         ];
+       ];
+      (*IF dissolve flag -> Dissolve*)
+      If[dissolve,
+       system = DissolveMembrane[membrane, system];
+       newSystem = DissolveMembrane[membrane, newSystem];
+       ];
+      ,
+      (*ELSE not all required symbols -> rule cannot be executed -> 
+      DELETE rule from rules, 
+      priority from priorities and currentIndex from \
+largestPriorityRulesIndex*)
+      For[
+       i = (FirstPosition[largestPriorityRulesIndex, currentIndex][[
+           1]] + 1), i <= Length[largestPriorityRulesIndex], i++,
+       largestPriorityRulesIndex[[i]] -= 1;
+       ];
+      largestPriorityRulesIndex = 
+       Delete[largestPriorityRulesIndex, 
+        FirstPosition[largestPriorityRulesIndex, currentIndex]];
+      rules = Delete[rules, currentIndex]; 
+      priorities = Delete[priorities, currentIndex];
+      ];(*END IF required symbols*)
+     ];(*END WHILE there are applicable rules with MAX priority*)
+    ];(*END WHILE not applied rule*)
+   Return[{system, newSystem}];
+   ];
+
+system2 = {1, {2, a, a, a, a, a, a, c, c, c, d}, {3}};
+rule21 = {{a, c}, {e, 2}};
+rule22 = {{a, e}, {c, 2}};
+rule23 = {{d}, {d, 2, 𝛿, 2}};
+rule24 = {{d, c, e}, {n, 3}};
+rule25 = {{d}, {s, 3}};
+prioritiesMembrane2 = {2, 2, 1};
+prioritiesMembrane1 = {2, 1};
+rules2 = {{2, {rule21, rule22, rule23}, 
+    prioritiesMembrane2}, {1, {rule24, rule25}, 
+    prioritiesMembrane1}};
+P = {system2, rules2, 3};
+Simulate[P, 15];

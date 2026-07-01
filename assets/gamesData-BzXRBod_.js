@@ -1,0 +1,1 @@
+import{n as e,t}from"./gamesData-CYwfIeW5.js";export{t as categories,e as gamesData};

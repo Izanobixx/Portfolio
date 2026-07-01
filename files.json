@@ -1,0 +1,351 @@
+{
+  "id": "root",
+  "label": "Este equipo",
+  "icon": "📁",
+  "type": "folder",
+  "children": [
+    {
+      "id": "Documentos",
+      "label": "Documentos",
+      "icon": "📁",
+      "type": "folder",
+      "children": [
+        {
+          "id": "Documentos/Observaciones",
+          "label": "Observaciones",
+          "icon": "📁",
+          "type": "folder",
+          "children": [
+            {
+              "id": "Documentos/Observaciones/Nota1.txt",
+              "label": "Nota1.txt",
+              "icon": "📝",
+              "type": "text",
+              "url": "/computer/Documentos/Observaciones/Nota1.txt"
+            }
+          ]
+        },
+        {
+          "id": "Documentos/Proyectos",
+          "label": "Proyectos",
+          "icon": "📁",
+          "type": "folder",
+          "children": [
+            {
+              "id": "Documentos/Proyectos/Simulaci-n-de-Sistemas-P",
+              "label": "Simulaci-n-de-Sistemas-P",
+              "icon": "📁",
+              "type": "folder",
+              "children": [
+                {
+                  "id": "Documentos/Proyectos/Simulaci-n-de-Sistemas-P/PSystems.nb",
+                  "label": "PSystems.nb",
+                  "icon": "📎",
+                  "type": "file",
+                  "url": "/computer/Documentos/Proyectos/Simulaci-n-de-Sistemas-P/PSystems.nb"
+                },
+                {
+                  "id": "Documentos/Proyectos/Simulaci-n-de-Sistemas-P/PSystemsTextCode.txt",
+                  "label": "PSystemsTextCode.txt",
+                  "icon": "📝",
+                  "type": "text",
+                  "url": "/computer/Documentos/Proyectos/Simulaci-n-de-Sistemas-P/PSystemsTextCode.txt"
+                },
+                {
+                  "id": "Documentos/Proyectos/Simulaci-n-de-Sistemas-P/SIMULADOR_SISTEMAS_P.pdf",
+                  "label": "SIMULADOR_SISTEMAS_P.pdf",
+                  "icon": "📄",
+                  "type": "pdf",
+                  "url": "/computer/Documentos/Proyectos/Simulaci-n-de-Sistemas-P/SIMULADOR_SISTEMAS_P.pdf"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "Documentos/Test",
+          "label": "Test",
+          "icon": "📁",
+          "type": "folder",
+          "children": []
+        },
+        {
+          "id": "Documentos/Universidad",
+          "label": "Universidad",
+          "icon": "📁",
+          "type": "folder",
+          "children": [
+            {
+              "id": "Documentos/Universidad/Libros_De_Texto",
+              "label": "Libros_De_Texto",
+              "icon": "📁",
+              "type": "folder",
+              "children": [
+                {
+                  "id": "Documentos/Universidad/Libros_De_Texto/FisicaUniversitariaVolumen1-WEB_JDl3rTk.pdf",
+                  "label": "FisicaUniversitariaVolumen1-WEB_JDl3rTk.pdf",
+                  "icon": "📄",
+                  "type": "pdf",
+                  "url": "/computer/Documentos/Universidad/Libros_De_Texto/FisicaUniversitariaVolumen1-WEB_JDl3rTk.pdf"
+                }
+              ]
+            },
+            {
+              "id": "Documentos/Universidad/Mates",
+              "label": "Mates",
+              "icon": "📁",
+              "type": "folder",
+              "children": [
+                {
+                  "id": "Documentos/Universidad/Mates/3blue1brown.pdf",
+                  "label": "3blue1brown.pdf",
+                  "icon": "📄",
+                  "type": "pdf",
+                  "url": "/computer/Documentos/Universidad/Mates/3blue1brown.pdf"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Imagenes",
+      "label": "Imagenes",
+      "icon": "📁",
+      "type": "folder",
+      "children": [
+        {
+          "id": "Imagenes/Personal",
+          "label": "Personal",
+          "icon": "📁",
+          "type": "folder",
+          "children": [
+            {
+              "id": "Imagenes/Personal/Nudes",
+              "label": "Nudes",
+              "icon": "📁",
+              "type": "folder",
+              "children": [
+                {
+                  "id": "Imagenes/Personal/Nudes/hmm...png",
+                  "label": "hmm...png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Personal/Nudes/hmm...png"
+                }
+              ]
+            },
+            {
+              "id": "Imagenes/Personal/2010.jpeg",
+              "label": "2010.jpeg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Personal/2010.jpeg"
+            },
+            {
+              "id": "Imagenes/Personal/Bajo.jpeg",
+              "label": "Bajo.jpeg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Personal/Bajo.jpeg"
+            },
+            {
+              "id": "Imagenes/Personal/Graduación1.jpg",
+              "label": "Graduación1.jpg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Personal/Graduación1.jpg"
+            }
+          ]
+        },
+        {
+          "id": "Imagenes/Proyectos",
+          "label": "Proyectos",
+          "icon": "📁",
+          "type": "folder",
+          "children": [
+            {
+              "id": "Imagenes/Proyectos/OC",
+              "label": "OC",
+              "icon": "📁",
+              "type": "folder",
+              "children": [
+                {
+                  "id": "Imagenes/Proyectos/OC/C1.png",
+                  "label": "C1.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/OC/C1.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/OC/C2.png",
+                  "label": "C2.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/OC/C2.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/OC/C3.png",
+                  "label": "C3.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/OC/C3.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/OC/C4.png",
+                  "label": "C4.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/OC/C4.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/OC/Clip.png",
+                  "label": "Clip.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/OC/Clip.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/OC/Park.png",
+                  "label": "Park.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/OC/Park.png"
+                }
+              ]
+            },
+            {
+              "id": "Imagenes/Proyectos/Prototipo_Zombie",
+              "label": "Prototipo_Zombie",
+              "icon": "📁",
+              "type": "folder",
+              "children": [
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/Arma.png",
+                  "label": "Arma.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/Arma.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/Fábrica.png",
+                  "label": "Fábrica.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/Fábrica.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/Human.png",
+                  "label": "Human.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/Human.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/Props.png",
+                  "label": "Props.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/Props.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/ZombieGame_1.png",
+                  "label": "ZombieGame_1.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/ZombieGame_1.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/ZombieGame_2.png",
+                  "label": "ZombieGame_2.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/ZombieGame_2.png"
+                },
+                {
+                  "id": "Imagenes/Proyectos/Prototipo_Zombie/ZombieGame_3.png",
+                  "label": "ZombieGame_3.png",
+                  "icon": "🖼️",
+                  "type": "image",
+                  "url": "/computer/Imagenes/Proyectos/Prototipo_Zombie/ZombieGame_3.png"
+                }
+              ]
+            },
+            {
+              "id": "Imagenes/Proyectos/Shrek.jpg",
+              "label": "Shrek.jpg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Proyectos/Shrek.jpg"
+            },
+            {
+              "id": "Imagenes/Proyectos/SML.jpg",
+              "label": "SML.jpg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Proyectos/SML.jpg"
+            }
+          ]
+        },
+        {
+          "id": "Imagenes/Universidad",
+          "label": "Universidad",
+          "icon": "📁",
+          "type": "folder",
+          "children": [
+            {
+              "id": "Imagenes/Universidad/AmongUsArea.jpeg",
+              "label": "AmongUsArea.jpeg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Universidad/AmongUsArea.jpeg"
+            },
+            {
+              "id": "Imagenes/Universidad/SegundoPuesto.png",
+              "label": "SegundoPuesto.png",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Universidad/SegundoPuesto.png"
+            },
+            {
+              "id": "Imagenes/Universidad/TercerPuesto.png",
+              "label": "TercerPuesto.png",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Universidad/TercerPuesto.png"
+            },
+            {
+              "id": "Imagenes/Universidad/WarmUp.jpeg",
+              "label": "WarmUp.jpeg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Universidad/WarmUp.jpeg"
+            },
+            {
+              "id": "Imagenes/Universidad/WhatsApp Image 2026-06-25 at 18.05.40.jpeg",
+              "label": "WhatsApp Image 2026-06-25 at 18.05.40.jpeg",
+              "icon": "🖼️",
+              "type": "image",
+              "url": "/computer/Imagenes/Universidad/WhatsApp Image 2026-06-25 at 18.05.40.jpeg"
+            }
+          ]
+        },
+        {
+          "id": "Imagenes/FotoPerfil.png",
+          "label": "FotoPerfil.png",
+          "icon": "🖼️",
+          "type": "image",
+          "url": "/computer/Imagenes/FotoPerfil.png"
+        }
+      ]
+    },
+    {
+      "id": "Videos",
+      "label": "Videos",
+      "icon": "📁",
+      "type": "folder",
+      "children": []
+    }
+  ]
+}
